@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book your private hair, nail, or spa appointment online at Cherished Beauty at Polofields Crossing, Midrand. Live price calculator and instant booking request.">
+  <title>Book Your Appointment | Cherished Beauty Waterfall</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <div class="grain-overlay"></div>
+
+  <!-- NAVBAR -->
+  <header class="cb-navbar" id="cb-navbar">
+    <div class="cb-container">
+      <div class="cb-nav-inner">
+        <a href="index.html" class="cb-nav-brand">
+          <img src="assets/images/logo.png" alt="Cherished Beauty Logo" class="cb-nav-logo-img">
+        </a>
+        <nav>
+          <ul class="cb-nav-links" id="cb-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="hair.html">Hair Services</a></li>
+            <li><a href="nails.html">Nail Studio</a></li>
+            <li><a href="pricing.html">Price List</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="team.html">Our Team</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="cb-nav-actions">
+          <a href="tel:0100234291" class="cb-nav-phone">010 023 4291</a>
+          <a href="booking.html" class="cb-btn cb-btn-cinnamon">Book Now</a>
+          <button class="cb-hamburger" id="cb-hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU OVERLAY -->
+  <div class="cb-mobile-menu">
+    <div class="cb-logo-card-dark">
+      <img src="assets/images/logo.png" alt="Cherished Beauty">
+    </div>
+    <ul class="cb-mobile-nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="hair.html">Hair Services</a></li>
+      <li><a href="nails.html">Nail Studio</a></li>
+      <li><a href="pricing.html">Price List</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="team.html">Our Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="booking.html" class="active">Book Appointment</a></li>
+    </ul>
+    <div class="cb-mobile-info">
+      <p>Polofields Crossing, Polofields Dr, Midrand 1684</p>
+      <p style="color: var(--vanity); margin-top: 0.4rem; font-style: italic;">Where Confidence Begins</p>
+    </div>
+  </div>
+
+  <!-- FIXED PHONE RAIL -->
+  <div class="cb-phone-rail">
+    <a href="tel:0100234291">Call Salon • 010 023 4291</a>
+  </div>
+
+  <!-- PAGE HERO -->
+  <section class="cb-page-hero" style="background-image: url('assets/images/spa-room2.jpg');">
+    <div class="cb-page-hero__overlay"></div>
+    <div class="cb-page-hero__content">
+      <p class="cb-hero__eyebrow cb-reveal">Reserve an Experience</p>
+      <h1 class="cb-page-hero__title cb-reveal">Book Your <em>Appointment</em></h1>
+      <p class="cb-page-hero__desc cb-reveal">Select your ritual, choose your preferred time, and our team will confirm your bespoke beauty session.</p>
+    </div>
+  </section>
+
+  <!-- BOOKING FORM SECTION -->
+  <section class="cb-section cb-section--dark">
+    <div class="cb-container">
+      <div class="cb-booking-wrap cb-reveal">
+        <div class="cb-section-header" style="margin-bottom: 2rem;">
+          <p class="cb-eyebrow cb-eyebrow--light">Online Reservation</p>
+          <h2 class="cb-heading" style="font-size: 2.2rem;">Appointment Details</h2>
+          <div class="cb-gold-line"></div>
+        </div>
+
+        <form id="cb-booking-form">
+          <div class="cb-form-grid cb-form-grid--2col">
+            <div class="cb-form-group">
+              <label for="cb-first-name">First Name *</label>
+              <input type="text" id="cb-first-name" class="cb-form-input" placeholder="e.g. Nomvula" required>
+            </div>
+            <div class="cb-form-group">
+              <label for="cb-last-name">Last Name *</label>
+              <input type="text" id="cb-last-name" class="cb-form-input" placeholder="e.g. Dlamini" required>
+            </div>
+          </div>
+
+          <div class="cb-form-grid cb-form-grid--2col">
+            <div class="cb-form-group">
+              <label for="cb-email">Email Address *</label>
+              <input type="email" id="cb-email" class="cb-form-input" placeholder="nomvula@example.co.za" required>
+            </div>
+            <div class="cb-form-group">
+              <label for="cb-phone">WhatsApp / Phone *</label>
+              <input type="tel" id="cb-phone" class="cb-form-input" placeholder="010 023 4291" required>
+            </div>
+          </div>
+
+          <div class="cb-form-group" style="margin-bottom: 1.5rem;">
+            <label for="cb-service-select">Select Your Treatment / Service *</label>
+            <select id="cb-service-select" class="cb-form-select" required>
+              <option value="">-- Choose a Service --</option>
+              
+              <optgroup label="✨ Hair Studio">
+                <option value="Mizani Silk Press (Short)" data-price="350">Mizani Silk Press - Short (R350)</option>
+                <option value="Mizani Silk Press (Medium)" data-price="450">Mizani Silk Press - Medium (R450)</option>
+                <option value="Mizani Silk Press (Long)" data-price="550">Mizani Silk Press - Long (R550)</option>
+                <option value="Bob Braids" data-price="650">Bob Braids (R650)</option>
+                <option value="Adult Bohemian Braids" data-price="980">Adult Bohemian Braids (From R980)</option>
+                <option value="French Curls (Medium)" data-price="1150">French Curls - Medium (R1,150)</option>
+                <option value="French Curls (Long)" data-price="1350">French Curls - Long (R1,350)</option>
+                <option value="Mizani Steam Treatment" data-price="380">Mizani Steam Treatment (R380)</option>
+                <option value="Full Relaxer" data-price="480">Full Relaxer &amp; Blow Out (R480)</option>
+              </optgroup>
+
+              <optgroup label="💅 Nail Studio">
+                <option value="Luxury Spa Pedicure" data-price="350">Luxury Spa Pedicure with Gel (R350)</option>
+                <option value="Express Pedicure" data-price="180">Express Pedicure (R180)</option>
+                <option value="Full Set Acrylic Short" data-price="350">Full Set Acrylic - Short (R350)</option>
+                <option value="Full Set Acrylic Medium" data-price="420">Full Set Acrylic - Medium (R420)</option>
+                <option value="Full Set Acrylic Long" data-price="500">Full Set Acrylic - Long / Coffin (R500)</option>
+                <option value="Gel Overlay (Hands)" data-price="250">Gel Overlay - Hands (R250)</option>
+                <option value="Polygel Overlay" data-price="380">Polygel Overlay (R380)</option>
+                <option value="Heel Peel Treatment" data-price="160">Heel Peel Treatment (R160)</option>
+              </optgroup>
+
+              <optgroup label="🌿 Spa &amp; Waxing">
+                <option value="Eyebrow Wax &amp; Shape" data-price="80">Eyebrow Wax &amp; Shape (R80)</option>
+                <option value="Full Face Wax" data-price="220">Full Face Wax (R220)</option>
+                <option value="Brazilian / Hollywood Wax" data-price="280">Brazilian / Hollywood Wax (R280)</option>
+                <option value="Full Leg Wax" data-price="290">Full Leg Wax (R290)</option>
+                <option value="Rejuvenating Glow Facial" data-price="450">Rejuvenating Glow Facial (R450)</option>
+                <option value="Exfoliating Body Scrub" data-price="380">Exfoliating Body Scrub (R380)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Dynamic Price Calculator -->
+          <div class="cb-calc-box">
+            <span class="cb-calc-label">Estimated Service Price:</span>
+            <span class="cb-calc-price" id="cb-calculated-price">R0</span>
+          </div>
+
+          <div class="cb-form-grid cb-form-grid--2col">
+            <div class="cb-form-group">
+              <label for="cb-booking-date">Preferred Date *</label>
+              <input type="date" id="cb-booking-date" class="cb-form-input" required>
+            </div>
+            <div class="cb-form-group">
+              <label for="cb-booking-time">Preferred Time *</label>
+              <select id="cb-booking-time" class="cb-form-select" required>
+                <option value="08:30 AM">08:30 AM</option>
+                <option value="09:30 AM">09:30 AM</option>
+                <option value="10:30 AM">10:30 AM</option>
+                <option value="11:30 AM">11:30 AM</option>
+                <option value="01:00 PM">01:00 PM</option>
+                <option value="02:30 PM">02:30 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
+                <option value="05:00 PM">05:00 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cb-form-group" style="margin-bottom: 2rem;">
+            <label for="cb-notes">Special Requests / Hair Texture Notes</label>
+            <textarea id="cb-notes" class="cb-form-textarea" rows="3" placeholder="Tell us if you have extra long hair, require removal, or have specific nail art in mind..."></textarea>
+          </div>
+
+          <button type="submit" class="cb-btn cb-btn-cinnamon" style="width: 100%; padding: 1rem; font-size: 0.95rem;">Confirm Appointment Request</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIRMATION MODAL -->
+  <div class="cb-modal" id="cb-booking-modal">
+    <div class="cb-modal-box">
+      <div style="font-size: 3rem; color: var(--cinnamon); margin-bottom: 1rem;">✦</div>
+      <h3 style="font-family: var(--font-serif); font-size: 2rem; color: var(--cream-pure); margin-bottom: 0.8rem;">Booking Request Sent</h3>
+      <p style="font-size: 0.95rem; color: rgba(250, 247, 242, 0.8); line-height: 1.6; margin-bottom: 1.5rem;" id="cb-modal-service-detail">
+        We have received your appointment request.
+      </p>
+      <p style="font-size: 0.82rem; color: var(--cinnamon); margin-bottom: 2rem;">
+        Our concierge will contact you via WhatsApp (010 023 4291) to confirm your slot.
+      </p>
+      <button class="cb-btn cb-btn-cinnamon" id="cb-close-modal">Done &amp; Close</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="cb-footer">
+    <div class="cb-footer-inner">
+      <div class="cb-footer-brand">
+        <img src="assets/images/logo.png" alt="Cherished Beauty Logo" class="cb-footer-logo">
+        <p class="cb-footer-tagline">Where Confidence Begins</p>
+        <p class="cb-footer-address">
+          Polofields Crossing<br>
+          Polofields Dr, Midrand, 1684<br>
+          Direct: 010 023 4291
+        </p>
+      </div>
+      <div class="cb-footer-col">
+        <h4 class="cb-footer-heading">Services</h4>
+        <ul>
+          <li><a href="hair.html">Hair Studio</a></li>
+          <li><a href="nails.html">Nail Studio</a></li>
+          <li><a href="pricing.html">Master Price List</a></li>
+        </ul>
+      </div>
+      <div class="cb-footer-col">
+        <h4 class="cb-footer-heading">Studio Hours</h4>
+        <ul>
+          <li>Mon &ndash; Fri: 08:00 &ndash; 18:00</li>
+          <li>Saturday: 08:00 &ndash; 16:00</li>
+          <li>Sunday: By Appointment</li>
+        </ul>
+      </div>
+      <div class="cb-footer-col">
+        <h4 class="cb-footer-heading">Connect</h4>
+        <ul>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="tel:0100234291">010 023 4291</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="cb-footer-bottom">
+      <p>&copy; 2020&ndash;2026 Cherished Beauty. All rights reserved. Polofields Crossing, Midrand.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

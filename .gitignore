@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+Thumbs.db
+
+# Python cache (build scripts)
+__pycache__/
+*.pyc
+
+# IDE
+.vs/
+.vscode/
+.idea/

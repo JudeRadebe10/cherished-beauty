@@ -1,0 +1,735 @@
+/* ==========================================================================
+   CHERISHED BEAUTY — GLOBAL DESIGN SYSTEM & STYLES
+   Brand Colors:
+   - Cinnamon Toast 178-3: #B38262 (Warm Toasted Caramel) -> Used for buttons, logo accent, side phone bar, tabs, prices & cards
+   - Victoria Vanity 117-5: #B97371 (Dusty Rose) -> Used for script overlays, italic accent words, ghost headlines & subtle glows
+   Palettes: Deep Espresso (#161110), Cream (#FAF7F2), Warm Sand (#EFE9DF)
+   Typography: Cormorant Garamond (Editorial Luxury Serif) & Plus Jakarta Sans / Jost
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Italiana&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Jost:wght@300;400;500;600&display=swap');
+
+:root {
+  /* True Client Paint Shades */
+  --cinnamon: #B38262;           /* Cinnamon Toast 178-3 (Warm Toasted Caramel) */
+  --cinnamon-light: #C8997A;
+  --cinnamon-dark: #8C5E40;     /* Darker cinnamon for high contrast readable labels */
+  --cinnamon-subtle: rgba(179, 130, 98, 0.12);
+  --cinnamon-border: rgba(179, 130, 98, 0.28);
+  --cinnamon-glow: rgba(179, 130, 98, 0.35);
+
+  --vanity: #B97371;             /* Victoria Vanity 117-5 (Dusty Rose) */
+  --vanity-deep: #8E4A48;
+  --vanity-light: #D48F8D;
+  --vanity-subtle: rgba(185, 115, 113, 0.12);
+  --vanity-glow: rgba(185, 115, 113, 0.25);
+
+  /* Foundation Neutrals (Preserved for pristine readability) */
+  --espresso: #161110;
+  --espresso-surface: #201817;
+  --espresso-light: #2A2120;
+  --espresso-card: rgba(32, 24, 23, 0.88);
+
+  --cream: #FAF7F2;
+  --cream-pure: #FFFDF9;
+  --sand: #EFE9DF;
+  --sand-light: #F7F3EC;
+  --sand-dark: #E2D9CB;
+
+  --glass: rgba(250, 247, 242, 0.05);
+  --glass-border: rgba(179, 130, 98, 0.22);
+
+  /* Typography */
+  --font-display: 'Italiana', 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Layout & Spacing */
+  --max-width: 1320px;
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --ease-framer: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 0.35s var(--ease-framer);
+  --transition-slow: 0.75s var(--ease-framer);
+}
+
+/* Base Resets */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  background-color: var(--cream);
+  color: var(--espresso);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+  line-height: 1.6;
+  background-color: var(--cream);
+  color: var(--espresso);
+  position: relative;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all var(--transition-smooth);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+/* Container */
+.cb-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.2rem, 3.5vw, 2.5rem);
+  padding-right: clamp(1.2rem, 3.5vw, 2.5rem);
+}
+
+/* Subtle Cinematic Noise Overlay */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   1. LUXURY FIXED NAVBAR
+   ========================================================================== */
+.cb-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(250, 247, 242, 0.90);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--cinnamon-border);
+  transition: all var(--transition-smooth);
+}
+
+.cb-navbar.scrolled {
+  background: rgba(250, 247, 242, 0.98);
+  box-shadow: 0 10px 32px rgba(22, 17, 16, 0.07);
+}
+
+.cb-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+  gap: 1.5rem;
+}
+
+.cb-nav-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.cb-nav-logo-img {
+  height: 68px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  display: block;
+  transition: transform var(--transition-smooth);
+}
+
+.cb-nav-brand:hover .cb-nav-logo-img {
+  transform: scale(1.03);
+}
+
+.cb-nav-links {
+  display: none;
+  align-items: center;
+  gap: clamp(1rem, 1.6vw, 1.8rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 1080px) {
+  .cb-nav-links {
+    display: flex;
+  }
+}
+
+.cb-nav-links a {
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--espresso);
+  position: relative;
+  padding: 0.35rem 0;
+  white-space: nowrap;
+}
+
+.cb-nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--cinnamon);
+  transition: width var(--transition-smooth);
+}
+
+.cb-nav-links a:hover::after,
+.cb-nav-links a.active::after {
+  width: 100%;
+}
+
+.cb-nav-links a:hover,
+.cb-nav-links a.active {
+  color: var(--cinnamon-dark);
+}
+
+.cb-nav-links a.active {
+  font-weight: 600;
+}
+
+.cb-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.cb-nav-phone {
+  display: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--espresso);
+  letter-spacing: 0.03em;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 1240px) {
+  .cb-nav-phone {
+    display: inline-flex;
+  }
+}
+
+.cb-nav-phone:hover {
+  color: var(--cinnamon);
+}
+
+/* Button Pills (Cinnamon Toast 178-3 Real Shade) */
+.cb-btn,
+.cb-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition-smooth);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.cb-btn-cinnamon,
+.cb-btn--primary {
+  background-color: var(--cinnamon);
+  color: var(--cream-pure);
+  box-shadow: 0 4px 18px var(--cinnamon-glow);
+}
+
+.cb-btn-cinnamon:hover,
+.cb-btn--primary:hover {
+  background-color: var(--cinnamon-dark);
+  color: var(--cream-pure);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--cinnamon-glow);
+}
+
+.cb-btn-outline,
+.cb-btn--outline {
+  background: transparent;
+  border-color: var(--cinnamon);
+  color: var(--espresso);
+}
+
+.cb-btn-outline:hover,
+.cb-btn--outline:hover {
+  background: var(--cinnamon);
+  border-color: var(--cinnamon);
+  color: var(--cream-pure);
+  transform: translateY(-2px);
+}
+
+.cb-btn--gold {
+  background: var(--cinnamon);
+  color: var(--cream-pure);
+  border: none;
+}
+
+.cb-btn--gold:hover {
+  background: var(--cream-pure);
+  color: var(--cinnamon-dark);
+  transform: translateY(-2px);
+}
+
+/* Hamburger */
+.cb-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 120;
+}
+
+@media (min-width: 1080px) {
+  .cb-hamburger {
+    display: none;
+  }
+}
+
+.cb-hamburger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--espresso);
+  transition: all var(--transition-smooth);
+  transform-origin: center;
+}
+
+.cb-hamburger.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+  background: var(--cream);
+}
+.cb-hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.cb-hamburger.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+  background: var(--cream);
+}
+
+/* Mobile Menu */
+.cb-mobile-menu {
+  position: fixed;
+  inset: 0;
+  background-color: var(--espresso);
+  color: var(--cream);
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-smooth);
+  padding: 2.5rem 1.5rem;
+  overflow-y: auto;
+}
+
+.cb-mobile-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cb-mobile-nav-links {
+  list-style: none;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.cb-mobile-nav-links a {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--cream);
+  transition: color var(--transition-smooth), transform var(--transition-smooth);
+  display: inline-block;
+}
+
+.cb-mobile-nav-links a:hover,
+.cb-mobile-nav-links a.active {
+  color: var(--cinnamon-light);
+  transform: translateX(4px);
+}
+
+.cb-mobile-info {
+  text-align: center;
+  font-size: 0.88rem;
+  color: rgba(250, 247, 242, 0.6);
+}
+
+.cb-logo-card-dark {
+  display: inline-block;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 1rem;
+}
+
+.cb-logo-card-dark img {
+  height: 60px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Fixed Phone Rail (Real Cinnamon Toast) */
+.cb-phone-rail {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .cb-phone-rail {
+    display: block;
+  }
+}
+
+.cb-phone-rail a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: var(--cinnamon);
+  color: var(--cream-pure);
+  padding: 1.3rem 0.65rem;
+  border-radius: 20px 0 0 20px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.12);
+  transition: all var(--transition-smooth);
+}
+
+.cb-phone-rail a:hover {
+  background-color: var(--cinnamon-dark);
+  padding-right: 0.9rem;
+  color: var(--cream-pure);
+}
+
+/* ==========================================================================
+   2. SECTION TYPOGRAPHY & DECORATIONS
+   ========================================================================== */
+.cb-section {
+  padding: clamp(4.5rem, 8vw, 7.5rem) 0;
+  position: relative;
+}
+
+.cb-section--dark {
+  background-color: var(--espresso);
+  color: var(--cream);
+}
+
+.cb-section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
+}
+
+.cb-eyebrow,
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cinnamon-dark);
+  margin-bottom: 0.8rem;
+  display: inline-block;
+}
+
+.cb-eyebrow--light {
+  color: var(--cinnamon-light);
+}
+
+.cb-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.12;
+  color: var(--espresso);
+  letter-spacing: -0.01em;
+}
+
+.cb-section--dark .cb-heading {
+  color: var(--cream-pure);
+}
+
+/* Italic Accent Words (Victoria Vanity 117-5 #B97371) */
+.cb-heading em,
+.cb-hero__title em,
+.cb-page-hero__title em,
+.cb-cta-banner__title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--vanity) !important;
+}
+
+.cb-subheading {
+  font-size: 1.05rem;
+  color: rgba(22, 17, 16, 0.72);
+  margin-top: 0.8rem;
+  line-height: 1.6;
+}
+
+.cb-section--dark .cb-subheading {
+  color: rgba(250, 247, 242, 0.7);
+}
+
+.cb-gold-line,
+.cb-gold-hairline {
+  width: 54px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cinnamon), transparent);
+  margin: 1.2rem auto 0;
+}
+
+/* ==========================================================================
+   3. CINEMATIC SCROLL REVEAL & INTERACTIVE CARD ANIMATIONS
+   ========================================================================== */
+.cb-reveal,
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s var(--ease-framer), transform 0.8s var(--ease-framer);
+}
+
+.cb-reveal-left,
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s var(--ease-framer), transform 0.8s var(--ease-framer);
+}
+
+.cb-reveal-right,
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s var(--ease-framer), transform 0.8s var(--ease-framer);
+}
+
+.cb-reveal.revealed,
+.cb-reveal-left.revealed,
+.cb-reveal-right.revealed,
+.reveal.revealed,
+.reveal-left.revealed,
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Luxury Interactive Card Styling (Cinnamon Toast Accents) */
+.cb-card,
+.cb-service-card,
+.cb-price-card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform 0.4s var(--ease-framer), box-shadow 0.4s var(--ease-framer), border-color 0.4s var(--ease-framer);
+}
+
+.cb-card:hover,
+.cb-service-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Image Zoom Effect */
+.cb-img-zoom {
+  overflow: hidden;
+  position: relative;
+}
+
+.cb-img-zoom img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-framer);
+}
+
+.cb-img-zoom:hover img {
+  transform: scale(1.06);
+}
+
+/* ==========================================================================
+   4. CTA BANNER
+   ========================================================================== */
+.cb-cta-banner {
+  background: linear-gradient(135deg, var(--espresso) 0%, #2D1E1B 50%, #3B2420 100%);
+  color: var(--cream);
+  padding: clamp(4.5rem, 8vw, 7rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--cinnamon-border);
+  border-bottom: 1px solid var(--cinnamon-border);
+}
+
+.cb-cta-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, var(--vanity-subtle) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cb-cta-banner__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.cb-cta-banner__title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--cream-pure);
+  margin: 0.8rem 0 1.2rem;
+}
+
+.cb-cta-banner__sub {
+  font-size: 1.1rem;
+  color: rgba(250, 247, 242, 0.85);
+  margin-bottom: 2.2rem;
+}
+
+/* ==========================================================================
+   5. FOOTER
+   ========================================================================== */
+.cb-footer {
+  background-color: var(--espresso);
+  color: var(--cream);
+  padding: clamp(4rem, 7vw, 6rem) 0 2rem;
+  position: relative;
+  border-top: 1px solid var(--cinnamon-border);
+}
+
+.cb-footer-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  max-width: var(--max-width);
+  margin: 0 auto 3.5rem;
+  padding: 0 clamp(1.2rem, 3.5vw, 2.5rem);
+}
+
+@media (min-width: 768px) {
+  .cb-footer-inner {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+.cb-footer-brand .cb-footer-logo {
+  height: 60px;
+  width: auto;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 1.2rem;
+}
+
+.cb-footer-tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--vanity);
+  margin-bottom: 0.6rem;
+}
+
+.cb-footer-address {
+  font-size: 0.88rem;
+  color: rgba(250, 247, 242, 0.65);
+  line-height: 1.6;
+}
+
+.cb-footer-heading {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--cream-pure);
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.cb-footer-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.cb-footer-col a {
+  color: rgba(250, 247, 242, 0.7);
+  font-size: 0.88rem;
+}
+
+.cb-footer-col a:hover {
+  color: var(--cinnamon-light);
+  transform: translateX(3px);
+}
+
+.cb-footer-col li {
+  color: rgba(250, 247, 242, 0.7);
+  font-size: 0.88rem;
+}
+
+.cb-footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.8rem clamp(1.2rem, 3.5vw, 2.5rem) 0;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  text-align: center;
+  font-size: 0.82rem;
+  color: rgba(250, 247, 242, 0.45);
+}
