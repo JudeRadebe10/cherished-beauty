@@ -1,0 +1,5 @@
+.site-nav.is-menu-open{color:var(--cream);background:var(--espresso);border-color:rgba(212,175,55,.15)}
+.site-nav.is-menu-open .brand-mark img{filter:brightness(0) invert(1)}
+.site-nav.is-menu-open .luxury-button{min-height:41px;background:var(--cream);border-color:var(--cream);color:var(--espresso)}
+.site-nav.is-menu-open .luxury-button>i{color:var(--cinnamon-deep)}
+@media(max-width:700px){.site-nav.is-menu-open .luxury-button{padding:0 12px}}

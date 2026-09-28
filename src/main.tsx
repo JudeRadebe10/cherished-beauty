@@ -14,6 +14,8 @@ import './pricing-nav.css';
 import './pricing-page.css';
 import './back-to-top.css';
 import './mobile-glyphs.css';
+import './navigation.css';
+import './journal.css';
 import '@fontsource/bodoni-moda/400.css';
 import '@fontsource/bodoni-moda/400-italic.css';
 import '@fontsource/dm-sans/400.css';
@@ -44,6 +46,7 @@ const routes = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Services', to: '/services' },
+  { label: 'Journal', to: '/journal' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'Contact', to: '/contact' },
 ];
@@ -145,12 +148,12 @@ function Navbar() {
 
   return (
     <>
-      <header className={`site-nav ${scrolled ? 'is-scrolled' : ''} ${dark ? 'is-dark' : ''}`}>
+      <header className={`site-nav ${scrolled ? 'is-scrolled' : ''} ${dark ? 'is-dark' : ''} ${menuOpen ? 'is-menu-open' : ''}`}>
         <Link className="brand-mark" to="/" aria-label="Cherished Beauty home">
           <img src={image('logo.png')} alt="Cherished Beauty" />
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
-          {routes.map((route) => <Link key={route.to} to={route.to} className={location.pathname === route.to ? 'current' : ''}>{route.label}</Link>)}
+          {routes.map((route) => <Link key={route.to} to={route.to} className={location.pathname === route.to || (route.to !== '/' && location.pathname.startsWith(`${route.to}/`)) ? 'current' : ''}>{route.label}</Link>)}
         </nav>
         <div className="nav-right">
           <a className="nav-location" href={mapsUrl} target="_blank" rel="noreferrer">Midrand <span><ArrowGlyph direction="up-right" /></span></a>
@@ -164,7 +167,7 @@ function Navbar() {
         <span className="mobile-index">01 · THE HOUSE</span>
         <nav aria-label="Mobile navigation">
           {routes.map((route, index) => <Link key={route.to} to={route.to} onClick={() => setMenuOpen(false)}><span>0{index + 1}</span>{route.label}</Link>)}
-          <a href={bookingUrl} onClick={() => setMenuOpen(false)}><span>06</span>Book a visit</a>
+          <a href={bookingUrl} onClick={() => setMenuOpen(false)}><span>07</span>Book a visit</a>
         </nav>
         <p>Polofields Crossing<br />Midrand 1684, South Africa</p>
       </div>
@@ -380,6 +383,19 @@ function HomePage() {
         <span className="vertical-note">POLofields · 01 / 04</span>
       </section>
 
+      <section className="journal-feature section-pad" data-chapter="light">
+        <div className="journal-feature-copy reveal">
+          <Eyebrow>FROM THE JOURNAL · 05 MAY 2026</Eyebrow>
+          <h2>The women<br />who <em>raised us.</em></h2>
+          <p>A Mother’s Day of beauty, memory, and connection at the salon once known as Luxaura.</p>
+          <Link className="text-link" to="/journal/the-women-who-raised-us">Read the story <span><ArrowGlyph direction="up-right" /></span></Link>
+        </div>
+        <Link className="journal-feature-image" to="/journal/the-women-who-raised-us" aria-label="Read The Women Who Raised Us: A Mother’s Day of Beauty">
+          <img src="https://gautenglifestylemagazine.co.za/wp-content/uploads/2026/05/Luxaura-image-1.webp" alt="A Mother’s Day beauty experience at Luxaura Boutique Salon" loading="lazy" />
+          <span>THE CHERISHED JOURNAL · 01</span>
+        </Link>
+      </section>
+
       <section className="service-world section-pad" data-chapter="light">
         <div className="section-heading reveal"><Eyebrow>A STUDY IN THREE PARTS</Eyebrow><h2>Different rituals.<br /><em>One point of view.</em></h2><span className="section-counter">01 / 03</span></div>
         <div className="service-list">
@@ -424,6 +440,44 @@ function HomePage() {
       <FAQSection />
     </main>
   );
+}
+
+function MotherDayArticle() {
+  return <main className="journal-page page-transition">
+    <header className="journal-heading">
+      <div className="journal-heading-copy">
+        <Eyebrow>THE CHERISHED JOURNAL · ARCHIVE</Eyebrow>
+        <h1>The Women Who<br /><em>Raised Us:</em><br />A Mother’s Day of Beauty</h1>
+        <p className="journal-deck">An intimate invitation to celebrate mothers through luxury self-care experiences rooted in connection and legacy.</p>
+        <div className="journal-byline"><span>5 May 2026</span><span>By <a href="https://gautenglifestylemagazine.co.za/author/admin-2/" target="_blank" rel="noreferrer">GLM</a></span></div>
+      </div>
+      <span className="journal-index">01 <i>/</i> JOURNAL</span>
+    </header>
+    <figure className="journal-cover">
+      <img src="https://gautenglifestylemagazine.co.za/wp-content/uploads/2026/05/Luxaura-image-1.webp" alt="The Mother’s Day experience at Luxaura Boutique Salon" />
+      <figcaption>POLOFIELDS CROSSING · MIDRAND</figcaption>
+    </figure>
+    <article className="journal-body">
+      <p className="journal-archive-note">This story was published ahead of the 10 May 2026 Mother’s Day experience.</p>
+      <p>This Mother’s Day, Luxaura Boutique Salon invites women to step into a space of softness, care, and intention as it hosts a special in-salon experience on 10 May 2026, dedicated to celebrating mothers and the women who raised us.</p>
+      <blockquote>“We wanted to create more than just a Mother’s Day offering. We wanted to create a moment. A space where women can honour the ones who raised them, while also celebrating themselves. For us, beauty has always been about connection, memory, and legacy,” say co-owners Thabisa Moloele and Mercy Kambarami.</blockquote>
+      <p>Rooted in the sentiment of “The Women Who Raised Us,” the experience honours mothers, grandmothers, and mother figures through the language of beauty, memory, and connection. It is an invitation to slow down and celebrate the quiet rituals and moments that have shaped generations of women.</p>
+      <h2>A considered offering</h2>
+      <p>On the day, guests will be treated to a curated selection of Mother’s Day specials, including:</p>
+      <ul>
+        <li>Natural wash, blow dry, and styling</li>
+        <li>Deep conditioning treatments</li>
+        <li>Basic hair treatments</li>
+        <li>Gel polish services</li>
+      </ul>
+      <p>Each offering is designed to feel both indulgent and restorative, perfect for mothers and daughters to enjoy together, or as a thoughtful gesture of appreciation. Floral bouquets will form part of the occasion, creating an elevated and thoughtful gifting moment for every guest. Advance bookings were essential so each bouquet could be prepared with care and intention.</p>
+      <p>Known for its refined aesthetic and intentional approach to self-care, Luxaura transformed its Waterfall space into a sanctuary of luxury where every detail was considered, and every experience rooted in meaning.</p>
+      <p>At the heart of the experience is the belief that self-care is deeply emotional. It lives in the rituals passed down, the lessons quietly taught, and the love that continues across generations. Luxaura brought this to life by creating an environment where those stories could be honoured in a modern, elevated setting.</p>
+      <p className="journal-closing">This Mother’s Day, Luxaura extended an invitation to pause, to indulge, and to celebrate the women who have shaped us beautifully, intentionally, and together.</p>
+      <p className="journal-source">Originally published by <a href="https://gautenglifestylemagazine.co.za/author/admin-2/" target="_blank" rel="noreferrer">Gauteng Lifestyle Magazine</a>.</p>
+    </article>
+    <BookingStrip title="A little time, just for you." />
+  </main>;
 }
 
 function ServiceRow({ number, title, sub, file, alt, to }: { number: string; title: string; sub: string; file: string; alt: string; to: string }) {
@@ -623,6 +677,8 @@ function App() {
   return <><ScrollToTopOnRouteChange /><Navbar /><Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/about" element={<AboutPage />} />
+    <Route path="/journal/the-women-who-raised-us" element={<MotherDayArticle />} />
+    <Route path="/journal" element={<MotherDayArticle />} />
     <Route path="/services" element={<ServicesPage />} />
     <Route path="/services/hair" element={<DisciplinePage kind="hair" />} />
     <Route path="/services/nails" element={<DisciplinePage kind="nails" />} />
