@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CHERISHED BEAUTY — PAGE SPECIFIC LUXURY EDITORIAL STYLES
+  CHERISHED BEAUTY: PAGE SPECIFIC LUXURY EDITORIAL STYLES
    Colors: Cinnamon Toast (#B38262) & Victoria Vanity (#B97371)
    ========================================================================== */
 
@@ -631,7 +631,7 @@
 }
 
 /* ==========================================================================
-   HERITAGE / ABOUT / TEAM
+   HERITAGE / ABOUT
    ========================================================================== */
 .cb-heritage-grid {
   display: grid;
@@ -647,66 +647,360 @@
   }
 }
 
-.cb-team-grid {
+/* ==========================================================================
+   CINNAMON LIGHT FIGMA-CLEAN EDITORIAL SYSTEM
+   (Pure typography, crisp rectangular imagery, generous whitespace)
+   ========================================================================== */
+
+.cb-editorial-hero {
+  background-color: var(--ivory);
+  padding: clamp(7rem, 14vw, 10rem) 0 clamp(3.5rem, 7vw, 5.5rem);
+  border-bottom: 1px solid var(--warm-grey);
+}
+
+.cb-editorial-hero__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .cb-editorial-hero__grid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+.cb-editorial-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--berry);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cb-editorial-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background-color: var(--cinnamon);
+}
+
+.cb-editorial-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--espresso);
+  margin-bottom: 1.4rem;
+}
+
+.cb-editorial-title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--berry);
+}
+
+.cb-editorial-desc {
+  font-family: var(--font-sans);
+  font-size: 1.08rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(27, 21, 20, 0.78);
+  max-width: 520px;
+  margin-bottom: 2.2rem;
+}
+
+.cb-editorial-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Crisp Rectangular Image Frame (No rounded corners, clean border) */
+.cb-editorial-frame {
+  position: relative;
+  background-color: var(--warm-grey);
+  border: 1px solid var(--warm-grey);
+  box-shadow: 0 16px 36px rgba(27, 21, 20, 0.05);
+}
+
+.cb-editorial-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 4 / 5;
+}
+
+.cb-editorial-frame--wide img {
+  aspect-ratio: 16 / 10;
+}
+
+/* Editorial Story Strip */
+.cb-story-section {
+  padding: clamp(4.5rem, 9vw, 7.5rem) 0;
+  background-color: var(--ivory);
+}
+
+.cb-story-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .cb-story-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cb-story-content {
+  max-width: 540px;
+}
+
+.cb-story-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--espresso);
+  margin-bottom: 1.4rem;
+}
+
+.cb-story-heading em {
+  font-style: italic;
+  color: var(--berry);
+}
+
+.cb-story-p {
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(27, 21, 20, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.cb-story-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.cb-story-features li {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--espresso);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cb-story-features li::before {
+  content: '·';
+  color: var(--cinnamon);
+  font-weight: 600;
+}
+
+/* Clean Editorial Service Listings (No prices, pure luxury hierarchy) */
+.cb-editorial-services {
+  padding: clamp(4.5rem, 9vw, 7.5rem) 0;
+  background-color: var(--warm-grey);
+}
+
+.cb-editorial-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto clamp(3rem, 6vw, 4.5rem);
+}
+
+.cb-editorial-header .cb-editorial-title {
+  margin-bottom: 0.8rem;
+}
+
+.cb-editorial-sub {
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  font-weight: 300;
+  color: rgba(27, 21, 20, 0.7);
+}
+
+.cb-services-list-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
 }
 
 @media (min-width: 768px) {
-  .cb-team-grid {
+  .cb-services-list-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1080px) {
-  .cb-team-grid {
+  .cb-services-list-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.cb-team-card {
-  background: var(--espresso-card);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  text-align: center;
-  padding: 2.5rem 1.8rem;
+.cb-service-group {
+  background: var(--ivory);
+  border: 1px solid rgba(27, 21, 20, 0.08);
+  padding: clamp(2rem, 3.5vw, 2.6rem);
+  box-shadow: 0 4px 18px rgba(27, 21, 20, 0.03);
 }
 
-.cb-team-avatar {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--cinnamon) 0%, var(--cinnamon-dark) 100%);
-  color: var(--cream-pure);
+.cb-service-group__title {
   font-family: var(--font-serif);
-  font-size: 1.8rem;
+  font-size: 1.7rem;
+  font-weight: 400;
+  color: var(--espresso);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--warm-grey);
+}
+
+.cb-service-group__list {
+  list-style: none;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.4rem;
-  border: 2px solid var(--cinnamon);
+  flex-direction: column;
+  gap: 1.3rem;
 }
 
-.cb-team-name {
+.cb-service-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cb-service-item__name {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--espresso);
+  letter-spacing: 0.01em;
+}
+
+.cb-service-item__desc {
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(27, 21, 20, 0.65);
+}
+
+/* Client Reviews / Testimonials Section */
+.cb-reviews-section {
+  padding: clamp(4.5rem, 9vw, 7.5rem) 0;
+  background-color: var(--ivory);
+  border-top: 1px solid var(--warm-grey);
+}
+
+.cb-reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .cb-reviews-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.cb-review-card {
+  background-color: var(--ivory);
+  border: 1px solid var(--warm-grey);
+  padding: 2.2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.cb-review-stars {
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  color: var(--cinnamon);
+}
+
+.cb-review-quote {
   font-family: var(--font-serif);
-  font-size: 1.45rem;
-  color: var(--cream-pure);
-  margin-bottom: 0.3rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--espresso);
 }
 
-.cb-team-role {
-  font-size: 0.78rem;
+.cb-review-author {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--cinnamon-light);
-  margin-bottom: 1rem;
+  color: var(--berry);
 }
 
-.cb-team-bio {
-  font-size: 0.9rem;
-  color: rgba(250, 247, 242, 0.7);
-  line-height: 1.6;
+.cb-review-service {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: rgba(27, 21, 20, 0.55);
+  display: block;
+  margin-top: 0.2rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Crisp Rectangular Gallery Showcase */
+.cb-editorial-gallery {
+  padding: clamp(4.5rem, 9vw, 7rem) 0;
+  background-color: var(--warm-grey);
+}
+
+.cb-editorial-gallery__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .cb-editorial-gallery__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cb-editorial-gallery__item {
+  border: 1px solid rgba(27, 21, 20, 0.08);
+  background-color: var(--ivory);
+}
+
+.cb-editorial-gallery__item img {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  object-fit: cover;
+  display: block;
+}
+
+.cb-editorial-gallery__caption {
+  padding: 1.2rem 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--espresso);
+  border-top: 1px solid var(--warm-grey);
 }

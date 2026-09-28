@@ -2,6 +2,10 @@
 .DS_Store
 Thumbs.db
 
+# Node.js and Vite output
+node_modules/
+dist/
+
 # Python cache (build scripts)
 __pycache__/
 *.pyc

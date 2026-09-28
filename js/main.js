@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CHERISHED BEAUTY — JAVASCRIPT INTERACTIONS & DYNAMIC TABS
+  CHERISHED BEAUTY: JAVASCRIPT INTERACTIONS & DYNAMIC TABS
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,23 +15,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // 2. Mobile Menu Toggle
+  // 2. Mobile Menu Toggle & Exit
   const hamburger = document.querySelector('.cb-hamburger');
   const mobileMenu = document.querySelector('.cb-mobile-menu');
+  const mobileCloseBtn = document.querySelector('.cb-mobile-close');
+
+  const closeMenu = () => {
+    if (hamburger) hamburger.classList.remove('active');
+    if (mobileMenu) mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
   if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('active');
-      mobileMenu.classList.toggle('open');
-      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('active', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     });
+
+    if (mobileCloseBtn) {
+      mobileCloseBtn.addEventListener('click', closeMenu);
+    }
 
     const mobileLinks = mobileMenu.querySelectorAll('a');
     mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('open');
-        document.body.style.overflow = '';
-      });
+      link.addEventListener('click', closeMenu);
     });
   }
 

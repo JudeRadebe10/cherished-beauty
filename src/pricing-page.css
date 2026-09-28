@@ -1,0 +1,15 @@
+.pricing-document-section{background:var(--vanity-soft);padding-top:clamp(78px,10vw,130px);padding-bottom:clamp(65px,8vw,110px)}
+.pricing-document-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;max-width:1320px;margin:0 auto 44px}
+.pricing-document-intro h2{margin:0;font:400 clamp(62px,8vw,104px)/.86 var(--serif);letter-spacing:-.06em}
+.pricing-document-intro h2 em{color:var(--vanity)}
+.pricing-document-intro p:not(.eyebrow){max-width:405px;margin:20px 0 0;color:#655752;font-size:12px;line-height:1.9}
+.pricing-document-actions{display:flex;flex-direction:column;align-items:flex-start;gap:17px;flex-shrink:0}
+.pricing-download-link{color:var(--cinnamon-deep);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(126,86,56,.5);padding-bottom:6px}
+.pricing-download-link span{margin-left:8px;color:var(--vanity);font-size:15px}
+.pricing-document-viewer{position:relative;max-width:1320px;margin:0 auto;background:#fff;box-shadow:0 24px 75px rgba(26,18,16,.18);overflow:hidden}
+.pricing-document-viewer iframe{display:block;width:100%;height:min(1000px,105vh);min-height:720px;border:0;background:var(--cream)}
+.pricing-viewer-fallback{display:flex;justify-content:space-between;gap:15px;padding:14px 18px;background:var(--espresso);color:var(--cream);font-size:9px;letter-spacing:.1em}
+.pricing-viewer-fallback span{color:var(--gold)}
+.pricing-document-foot{display:flex;justify-content:space-between;gap:20px;max-width:1320px;margin:20px auto 0;color:var(--cinnamon-deep);font-size:8px;font-weight:700;letter-spacing:.13em}
+.pricing-document-foot a{color:var(--espresso)}
+@media(max-width:700px){.pricing-document-section{padding:76px var(--gutter) 60px}.pricing-document-intro{align-items:flex-start;flex-direction:column;gap:28px;margin-bottom:30px}.pricing-document-intro h2{font-size:72px}.pricing-document-intro p:not(.eyebrow){max-width:340px}.pricing-document-actions{flex-direction:row;align-items:center;flex-wrap:wrap;gap:18px}.pricing-document-viewer iframe{height:78svh;min-height:560px}.pricing-viewer-fallback{font-size:8px;line-height:1.6}.pricing-document-foot{flex-direction:column;font-size:7px;line-height:1.7}}
