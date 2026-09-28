@@ -318,7 +318,7 @@ function BookingPrompt() {
   }, [open]);
 
   if (!open) return null;
-  return <div className="booking-prompt-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="booking-prompt" role="dialog" aria-modal="true" aria-labelledby="booking-prompt-title"><button className="booking-prompt-close" type="button" aria-label="Close booking invitation" onClick={() => setOpen(false)}>×</button><Eyebrow>WHENEVER YOU’RE READY</Eyebrow><h2 id="booking-prompt-title">A little time,<br /><em>for you.</em></h2><p>Choose your service and preferred time through our booking page.</p><a className="luxury-button" href={bookingUrl}><span>Make a booking</span><i><ArrowGlyph direction="up-right" /></i></a></section></div>;
+  return <div className="booking-prompt-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="booking-prompt" role="dialog" aria-modal="true" aria-labelledby="booking-prompt-title"><button className="booking-prompt-close" type="button" aria-label="Close booking invitation" onClick={() => setOpen(false)}><ArrowGlyph direction="left" /></button><Eyebrow>WHENEVER YOU’RE READY</Eyebrow><h2 id="booking-prompt-title">A little time,<br /><em>for you.</em></h2><p>Choose your service and preferred time through our booking page.</p><a className="luxury-button" href={bookingUrl}><span>Make a booking</span><i><ArrowGlyph direction="up-right" /></i></a></section></div>;
 }
 
 function BackToTop() {
@@ -363,7 +363,7 @@ function HomePage() {
   return (
     <main>
       <section className="home-hero" data-chapter="light">
-        <div className="hero-photo" style={{ backgroundImage: `url("${image('hair-silk-back.jpg')}")` }} />
+        <div className="hero-photo" style={{ backgroundImage: `url("${image('CherishedBeautyBalloons.PNG')}")` }} />
         <div className="hero-surface" />
         <div className="hero-meta"><span>POLOFIELDS CROSSING · MIDRAND</span><span>FORMERLY LUXAURA</span></div>
         <div className="hero-title-wrap">
@@ -433,9 +433,61 @@ function ServiceRow({ number, title, sub, file, alt, to }: { number: string; tit
 function AboutPage() {
   return <main className="page-transition">
     <PageIntro eyebrow="A NAME, RECONSIDERED" title="Before Cherished" accent="there was Luxaura." copy="A familiar place. A new name. The beginning of a more personal point of view." imageFile="salon-hair-overview.jpg" imageAlt="An overview of the salon" />
-    <section className="about-origin section-pad"><div className="origin-heading reveal"><Eyebrow>THE FIRST CHAPTER</Eyebrow><h2>Before the name,<br />there was the <em>feeling.</em></h2></div><ImagePanel file="salon-hair-side.jpg" alt="A view across the Cherished Beauty hair studio" className="origin-image" /><p className="origin-copy reveal">Luxaura became Cherished Beauty. The address stayed: Polofields Crossing. What matters most stayed too: a thoughtful welcome, a considered room, and time set aside for you.</p></section>
-    <section className="about-change" data-chapter="dark"><div className="about-change-image"><img src={image('salon-overview.jpg')} alt="A view of the salon's welcoming interior" loading="lazy" /></div><div className="about-change-copy reveal"><Eyebrow light>THEN SOMETHING CHANGED</Eyebrow><p>Not a departure.<br />A becoming.</p><span>The next chapter has a name.</span></div></section>
-    <section className="about-name section-pad" data-chapter="light"><Eyebrow>THE NAME WE CHOSE</Eyebrow><h2 className="about-wordmark">Cherished<br /><em>Beauty.</em></h2><p>At Polofields Crossing, Midrand.</p><LuxuryButton to="/services">Step inside the house</LuxuryButton></section>
+
+    <section className="about-origin section-pad">
+      <div className="origin-heading reveal"><Eyebrow>THE FIRST CHAPTER</Eyebrow><h2>Before the name,<br />there was the <em>feeling.</em></h2></div>
+      <ImagePanel file="salon-hair-side.jpg" alt="A view across the Cherished Beauty hair studio" className="origin-image" />
+      <p className="origin-copy reveal">Luxaura became Cherished Beauty. The address stayed: Polofields Crossing. What matters most stayed too: a thoughtful welcome, a considered room, and time set aside for you.</p>
+    </section>
+
+    <section className="section-pad" data-chapter="light">
+      <div className="origin-heading reveal" style={{ textAlign: 'center' }}><Eyebrow>FOUNDING FAMILIES</Eyebrow><h2>Built by people<br />who truly <em>care.</em></h2></div>
+      <div className="about-family-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+        <article className="reveal" style={{ background: '#f4efe8', border: '1px solid rgba(31, 21, 17, 0.08)', borderRadius: '22px', overflow: 'hidden' }}>
+          <img src={image('Founders.PNG')} alt="Thabisa Moloele and Mercy Kambarami" loading="lazy" style={{ width: '100%', height: '420px', objectFit: 'cover', display: 'block' }} />
+          <div style={{ padding: '1.4rem 1.3rem 1.6rem' }}>
+            <Eyebrow>FOUNDERS</Eyebrow>
+            <h3 style={{ fontFamily: '"Bodoni Moda", serif', fontSize: '2rem', margin: '0.4rem 0 0.6rem', lineHeight: 1.08 }}>Thabisa Moloele &amp; Mercy Kambarami</h3>
+            <p style={{ margin: 0, color: '#4b3a33', lineHeight: 1.7 }}>Two marketing mavens acquired the salon in Waterfall to create a more personal, more intentional beauty experience rooted in confidence and care.</p>
+          </div>
+        </article>
+
+        <article className="reveal" style={{ background: '#f4efe8', border: '1px solid rgba(31, 21, 17, 0.08)', borderRadius: '22px', overflow: 'hidden' }}>
+          <img src={image('Foundingfamily.PNG')} alt="Supporters and family attending the salon opening" loading="lazy" style={{ width: '100%', height: '420px', objectFit: 'cover', display: 'block' }} />
+          <div style={{ padding: '1.4rem 1.3rem 1.6rem' }}>
+            <Eyebrow>SUPPORT</Eyebrow>
+            <h3 style={{ fontFamily: '"Bodoni Moda", serif', fontSize: '2rem', margin: '0.4rem 0 0.6rem', lineHeight: 1.08 }}>A good grand opening, and a lot of love.</h3>
+            <p style={{ margin: 0, color: '#4b3a33', lineHeight: 1.7 }}>Friends, family, and our wider community showed up on the 20th of September 2026 to celebrate the new chapter and welcome the house into the neighbourhood.</p>
+          </div>
+        </article>
+
+        <article className="reveal" style={{ background: '#f4efe8', border: '1px solid rgba(31, 21, 17, 0.08)', borderRadius: '22px', overflow: 'hidden' }}>
+          <img src={image('AllStaff.PNG')} alt="The Cherished Beauty staff team" loading="lazy" style={{ width: '100%', height: '420px', objectFit: 'cover', display: 'block' }} />
+          <div style={{ padding: '1.4rem 1.3rem 1.6rem' }}>
+            <Eyebrow>STAFF</Eyebrow>
+            <h3 style={{ fontFamily: '"Bodoni Moda", serif', fontSize: '2rem', margin: '0.4rem 0 0.6rem', lineHeight: 1.08 }}>A team shaped by detail.</h3>
+            <p style={{ margin: 0, color: '#4b3a33', lineHeight: 1.7 }}>From the salon floor to the treatment room, the Cherished Beauty team works with warmth, precision, and a genuine understanding of how beauty should feel.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section className="about-change" data-chapter="dark">
+      <div className="about-change-image"><img src={image('Clientshavingaconversation.PNG')} alt="Clients having a conversation in the salon" loading="lazy" /></div>
+      <div className="about-change-copy reveal">
+        <Eyebrow light>THEN SOMETHING CHANGED</Eyebrow>
+        <p>Not a departure.<br />A becoming.</p>
+        <span>The next chapter has a name.</span>
+      </div>
+    </section>
+
+    <section className="about-name section-pad" data-chapter="light">
+      <Eyebrow>THE NAME WE CHOSE</Eyebrow>
+      <h2 className="about-wordmark">Cherished<br /><em>Beauty.</em></h2>
+      <p>At Polofields Crossing, Midrand.</p>
+      <LuxuryButton to="/services">Step inside the house</LuxuryButton>
+    </section>
+
     <BookingStrip title="Come meet the new chapter." />
   </main>;
 }
@@ -488,6 +540,10 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
     {kind === 'hair' && <section className="braid-feature" aria-label="Braids at Cherished Beauty"><div className="braid-feature-image"><img src={image('Braids1.jpeg')} alt="Close-up of neat, patterned braids at the Cherished Beauty salon" loading="lazy" /></div><div className="braid-feature-copy reveal"><Eyebrow>THE BRAIDING EDIT</Eyebrow><h2>Parting.<br />Pattern.<br /><em>Presence.</em></h2><p>A close look at the craft in every line.</p><a className="text-link" href="https://myappointment.co.za/cgi-bin/myappointment/makeappt.pl?1548333612::">Explore braiding appointments <span><ArrowGlyph direction="up-right" /></span></a></div><span className="braid-feature-index">HAIR ROOM · 01</span></section>}
     {kind === 'hair' && <section className="hair-film-edit" data-chapter="dark"><div className="hair-film-heading reveal"><Eyebrow light>THE BRAIDING EDIT · IN MOTION</Eyebrow><h2>Three studies<br />in <em>braid.</em></h2></div><div className="hair-film-grid"><SilentVideo src="/videos/long-blonde-braids.mp4" poster="Braids1.jpeg" label="Long blonde braids" /><SilentVideo src="/videos/luxury-braid-design.mp4" poster="brownBraids-optimized.jpg" label="Braid design, considered" /><SilentVideo src="/videos/braids-video.mp4" poster="dreadlocksBrown.JPG" label="The braiding edit" /></div></section>}
     {kind === 'hair' && <section className="hair-gallery section-pad"><div className="hair-gallery-heading reveal"><Eyebrow>TEXTURE · LENGTH · FINISH</Eyebrow><h2>Hair, in<br /><em>many forms.</em></h2></div><div className="hair-gallery-grid"><ImagePanel file="wig5.JPG" alt="Curly braids with soft, defined texture" className="hair-look hair-look-curly-braids" label="CURLY BRAIDS" /><ImagePanel file="wigDoll.JPG" alt="Voluminous curly wig styled at Cherished Beauty" className="hair-look hair-look-wig" label="CURLY WIG" /><ImagePanel file="brownBraids-optimized.jpg" alt="Long brown braids with curly ends" className="hair-look hair-look-brown-braids" label="BRAIDS, WITH CURL" /><ImagePanel file="curlyweave.jpeg" alt="Defined curls styled at the salon" className="hair-look hair-look-weave" label="CURLY WEAVE" /><ImagePanel file="dreadlocksBrown.JPG" alt="Brown dreadlocks styled at Cherished Beauty" className="hair-look hair-look-dreadlocks" label="DREADLOCKS" /></div></section>}
+    {kind === 'nails' && <section className="discipline-story section-pad" style={{ paddingTop: '4rem' }}>
+      <div className="discipline-story-copy reveal"><Eyebrow>OUR NAIL TECHNICIAN</Eyebrow><h2>Louisa, with a<br /><em>steady hand.</em></h2><p>From precise shaping to polished finishing, Louisa brings calm confidence and a sharp eye for detail to every appointment.</p></div>
+      <ImagePanel file="LousiaNailTech.PNG" alt="Louisa creating a manicure at Cherished Beauty" className="discipline-story-image" label="LOUISA · NAIL TECHNICIAN" />
+    </section>}
     {kind === 'nails' && <section className="nail-gallery-section" aria-labelledby="nail-gallery-heading">
       <div className="nail-gallery-heading reveal"><Eyebrow>THE NAIL ROOM · IN FOCUS</Eyebrow><h2 id="nail-gallery-heading">Colour, form<br /><em>&amp; finish.</em></h2><p>A closer look at the details, from Cherished Beauty.</p></div>
       <div className="nail-gallery-grid">
@@ -502,14 +558,14 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
       </div>
       <div className="nail-gallery-footnote"><span>THE NAIL ROOM</span><span>POLOFIELDS CROSSING · MIDRAND</span></div>
       {activeNailPhoto !== null && <div className="nail-lightbox" role="dialog" aria-modal="true" aria-label={`Nail gallery photograph ${activeNailPhoto + 1}`} onClick={() => setActiveNailPhoto(null)}>
-        <button className="nail-lightbox-close" type="button" aria-label="Close gallery" onClick={() => setActiveNailPhoto(null)}>×</button>
+        <button className="nail-lightbox-close" type="button" aria-label="Close gallery" onClick={() => setActiveNailPhoto(null)}><ArrowGlyph direction="left" /></button>
         <button className="nail-lightbox-nav nail-lightbox-prev" type="button" aria-label="Previous photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 9) % 10); }}><ArrowGlyph direction="left" /></button>
         <img src={image(`Nails${activeNailPhoto + 1}.jpeg`)} alt={`Nail design at Cherished Beauty, photograph ${activeNailPhoto + 1}`} onClick={(event) => event.stopPropagation()} />
         <span className="nail-lightbox-count">{String(activeNailPhoto + 1).padStart(2, '0')} <i>/</i> 10</span>
         <button className="nail-lightbox-nav nail-lightbox-next" type="button" aria-label="Next photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 1) % 10); }}><ArrowGlyph direction="right" /></button>
       </div>}
     </section>}
-    <section className="menu-chapter" data-chapter="dark"><div className="menu-chapter-top"><Eyebrow light>THE ROOM, AT A GLANCE</Eyebrow><span>POL OFIELDS · {kind.toUpperCase()}</span></div><h2 className="menu-chapter-title">A few of<br /><em>our rituals.</em></h2><div className="ritual-list">{item.categories.map((category, index) => <div className="ritual-line reveal" key={category}><span>0{index + 1}</span><p>{category}</p><i>✳</i></div>)}</div><p className="menu-note">For current service availability and appointment details, please contact the studio.</p></section>
+    <section className="menu-chapter" data-chapter="dark"><div className="menu-chapter-top"><Eyebrow light>THE ROOM, AT A GLANCE</Eyebrow><span>POL OFIELDS · {kind.toUpperCase()}</span></div><h2 className="menu-chapter-title">A few of<br /><em>our rituals.</em></h2><div className="ritual-list">{item.categories.map((category, index) => <div className="ritual-line reveal" key={category}><span>0{index + 1}</span><p>{category}</p><i aria-hidden="true"><ArrowGlyph direction="up-right" /></i></div>)}</div><p className="menu-note">For current service availability and appointment details, please contact the studio.</p></section>
     <section className="discipline-last"><ImagePanel file={item.second} alt={item.secondAlt} className="discipline-last-image" /><div className="discipline-last-copy reveal"><Eyebrow>AT POLOFIELDS CROSSING</Eyebrow><p>Made of<br />small, good<br /><em>details.</em></p><LuxuryButton to="/booking">Ask about a visit</LuxuryButton></div></section>
     <BookingStrip title="Your time, your way." />
   </main>;
