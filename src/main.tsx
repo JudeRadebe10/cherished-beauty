@@ -12,6 +12,8 @@ import './showcase-layout.css';
 import './engagement.css';
 import './pricing-nav.css';
 import './pricing-page.css';
+import './back-to-top.css';
+import './mobile-glyphs.css';
 import '@fontsource/bodoni-moda/400.css';
 import '@fontsource/bodoni-moda/400-italic.css';
 import '@fontsource/dm-sans/400.css';
@@ -46,10 +48,28 @@ const routes = [
   { label: 'Contact', to: '/contact' },
 ];
 
+function ScrollToTopOnRouteChange() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const resetScroll = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    window.history.scrollRestoration = 'manual';
+    requestAnimationFrame(resetScroll);
+    requestAnimationFrame(resetScroll);
+  }, [location.pathname]);
+
+  return null;
+}
+
 function usePageMotion() {
   const location = useLocation();
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
 
@@ -133,7 +153,7 @@ function Navbar() {
           {routes.map((route) => <Link key={route.to} to={route.to} className={location.pathname === route.to ? 'current' : ''}>{route.label}</Link>)}
         </nav>
         <div className="nav-right">
-          <a className="nav-location" href={mapsUrl} target="_blank" rel="noreferrer">Midrand <span>↗</span></a>
+          <a className="nav-location" href={mapsUrl} target="_blank" rel="noreferrer">Midrand <span><ArrowGlyph direction="up-right" /></span></a>
           <LuxuryButton to="/booking" compact>Book a visit</LuxuryButton>
           <button className={`menu-toggle ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen}>
             <span /><span />
@@ -152,10 +172,28 @@ function Navbar() {
   );
 }
 
+function ArrowGlyph({ direction = 'up-right' }: { direction?: 'up-right' | 'up' | 'down' | 'left' | 'right' }) {
+  const props = { viewBox: '0 0 24 24', 'aria-hidden': 'true', className: 'arrow-glyph' } as const;
+
+  const pathMap = {
+    'up-right': 'M7 17L17 7M8 7H17V16',
+    up: 'M12 19V5M5 12L12 5L19 12',
+    down: 'M12 5V19M5 12L12 19L19 12',
+    left: 'M17 12H7M12 5L5 12L12 19',
+    right: 'M7 12H17M12 5L19 12L12 19',
+  } as const;
+
+  return (
+    <svg {...props}>
+      <path d={pathMap[direction]} />
+    </svg>
+  );
+}
+
 function LuxuryButton({ to, children, compact = false, light = false }: { to: string; children: ReactNode; compact?: boolean; light?: boolean }) {
   const className = `luxury-button ${compact ? 'is-compact' : ''} ${light ? 'is-light' : ''}`;
-  if (to === '/booking') return <a className={className} href={bookingUrl}><span>{children}</span><i aria-hidden="true">↗</i></a>;
-  return <Link className={className} to={to}><span>{children}</span><i aria-hidden="true">↗</i></Link>;
+  if (to === '/booking') return <a className={className} href={bookingUrl}><span>{children}</span><i aria-hidden="true"><ArrowGlyph direction="up-right" /></i></a>;
+  return <Link className={className} to={to}><span>{children}</span><i aria-hidden="true"><ArrowGlyph direction="up-right" /></i></Link>;
 }
 
 function Eyebrow({ children, light = false }: { children: ReactNode; light?: boolean }) {
@@ -197,7 +235,7 @@ function BookingStrip({ title = 'A visit, made yours.' }: { title?: string }) {
 }
 
 function LocationCard() {
-  return <section className="location-card-wrap section-pad"><div className="location-card reveal"><div className="location-card-copy"><Eyebrow>OUR STORE</Eyebrow><h2>Find us in<br /><em>Midrand.</em></h2><p>Polofields Crossing<br />Polofields Dr<br />Midrand<br />1684</p><a className="luxury-button" href={mapsUrl} target="_blank" rel="noreferrer"><span>Open in Google Maps</span><i>↗</i></a></div><div className="location-map-card"><iframe src={mapEmbedUrl} title="Google Map to Cherished Beauty at Polofields Crossing, Midrand" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen /><a href={mapsUrl} target="_blank" rel="noreferrer">POLOFIELDS CROSSING · MIDRAND · OPEN IN MAPS ↗</a></div></div></section>;
+  return <section className="location-card-wrap section-pad"><div className="location-card reveal"><div className="location-card-copy"><Eyebrow>OUR STORE</Eyebrow><h2>Find us in<br /><em>Midrand.</em></h2><p>Polofields Crossing<br />Polofields Dr<br />Midrand<br />1684</p><a className="luxury-button" href={mapsUrl} target="_blank" rel="noreferrer"><span>Open in Google Maps</span><i><ArrowGlyph direction="up-right" /></i></a></div><div className="location-map-card"><iframe src={mapEmbedUrl} title="Google Map to Cherished Beauty at Polofields Crossing, Midrand" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen /><a href={mapsUrl} target="_blank" rel="noreferrer">POLOFIELDS CROSSING · MIDRAND · OPEN IN MAPS <ArrowGlyph direction="up-right" /></a></div></div></section>;
 }
 
 const googleReviews = [
@@ -211,7 +249,7 @@ const googleReviews = [
 ];
 
 function ReviewsSection() {
-  return <section className="reviews-section section-pad"><div className="reviews-heading reveal"><Eyebrow>THE WORD, FROM OUR GUESTS</Eyebrow><h2>Seven notes<br />from <em>Google.</em></h2><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Read Cherished Beauty on Google <span>↗</span></a></div><div className="reviews-list">{googleReviews.map((review, index) => <article className="review-quote reveal" key={review.name}><span className="review-index">0{index + 1} / 07</span><blockquote>“{review.quote}”</blockquote><a href={review.href} target="_blank" rel="noreferrer">{review.name} <span>· GOOGLE REVIEW ↗</span></a></article>)}</div></section>;
+  return <section className="reviews-section section-pad"><div className="reviews-heading reveal"><Eyebrow>THE WORD, FROM OUR GUESTS</Eyebrow><h2>Seven notes<br />from <em>Google.</em></h2><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Read Cherished Beauty on Google <span><ArrowGlyph direction="up-right" /></span></a></div><div className="reviews-list">{googleReviews.map((review, index) => <article className="review-quote reveal" key={review.name}><span className="review-index">0{index + 1} / 07</span><blockquote>“{review.quote}”</blockquote><a href={review.href} target="_blank" rel="noreferrer">{review.name} <span>· GOOGLE REVIEW <ArrowGlyph direction="up-right" /></span></a></article>)}</div></section>;
 }
 
 const faqItems = [
@@ -235,7 +273,7 @@ function NewsletterSignup() {
     window.location.href = `mailto:waterfall@luxaura.co.za?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
-  return <div className="newsletter-block"><div><Eyebrow light>A LETTER, NOW AND THEN</Eyebrow><h2>A little beauty<br /><em>in your inbox.</em></h2><p>Occasional notes from the house. No noise.</p></div><form className="newsletter-form" onSubmit={submit}><label htmlFor="newsletter-email">Your email address</label><div><input id="newsletter-email" name="newsletter-email" type="email" autoComplete="email" placeholder="you@example.com" required /><button type="submit" aria-label="Sign up for the newsletter">Join <span>↗</span></button></div>{submitted && <p className="newsletter-status" role="status">Your email app is opening with your sign-up request addressed to us.</p>}</form></div>;
+  return <div className="newsletter-block"><div><Eyebrow light>A LETTER, NOW AND THEN</Eyebrow><h2>A little beauty<br /><em>in your inbox.</em></h2><p>Occasional notes from the house. No noise.</p></div><form className="newsletter-form" onSubmit={submit}><label htmlFor="newsletter-email">Your email address</label><div><input id="newsletter-email" name="newsletter-email" type="email" autoComplete="email" placeholder="you@example.com" required /><button type="submit" aria-label="Sign up for the newsletter">Join <span><ArrowGlyph direction="up-right" /></span></button></div>{submitted && <p className="newsletter-status" role="status">Your email app is opening with your sign-up request addressed to us.</p>}</form></div>;
 }
 
 function BookingPrompt() {
@@ -280,19 +318,39 @@ function BookingPrompt() {
   }, [open]);
 
   if (!open) return null;
-  return <div className="booking-prompt-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="booking-prompt" role="dialog" aria-modal="true" aria-labelledby="booking-prompt-title"><button className="booking-prompt-close" type="button" aria-label="Close booking invitation" onClick={() => setOpen(false)}>×</button><Eyebrow>WHENEVER YOU’RE READY</Eyebrow><h2 id="booking-prompt-title">A little time,<br /><em>for you.</em></h2><p>Choose your service and preferred time through our booking page.</p><a className="luxury-button" href={bookingUrl}><span>Make a booking</span><i>↗</i></a></section></div>;
+  return <div className="booking-prompt-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="booking-prompt" role="dialog" aria-modal="true" aria-labelledby="booking-prompt-title"><button className="booking-prompt-close" type="button" aria-label="Close booking invitation" onClick={() => setOpen(false)}>×</button><Eyebrow>WHENEVER YOU’RE READY</Eyebrow><h2 id="booking-prompt-title">A little time,<br /><em>for you.</em></h2><p>Choose your service and preferred time through our booking page.</p><a className="luxury-button" href={bookingUrl}><span>Make a booking</span><i><ArrowGlyph direction="up-right" /></i></a></section></div>;
+}
+
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const updateVisibility = () => setVisible(window.scrollY > 420);
+    updateVisibility();
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    return () => window.removeEventListener('scroll', updateVisibility);
+  }, []);
+
+  const returnToTop = () => {
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    window.scrollTo({ top: 0, behavior });
+  };
+
+  return <button className={`back-to-top ${visible ? 'is-visible' : ''}`} type="button" onClick={returnToTop} aria-label="Back to top" tabIndex={visible ? 0 : -1} aria-hidden={!visible}>
+    <span aria-hidden="true"><ArrowGlyph direction="up" /></span><small>TOP</small>
+  </button>;
 }
 
 function Footer() {
   return (
     <footer className="site-footer" data-chapter="dark">
-      <div className="footer-topline"><span>Polofields Crossing · Polofields Dr</span><span>Midrand · 1684 · South Africa</span><a href="tel:0100234291">010 023 4291 ↗</a></div>
+      <div className="footer-topline"><span>Polofields Crossing · Polofields Dr</span><span>Midrand · 1684 · South Africa</span><a href="tel:0100234291">010 023 4291 <ArrowGlyph direction="up-right" /></a></div>
       <div className="footer-wordmark" aria-label="Cherished Beauty"><span>CHERISHED</span><em>BEAUTY</em></div>
       <NewsletterSignup />
       <div className="footer-bottom">
         <p>An experience never imagined.</p>
         <nav aria-label="Footer navigation">{routes.slice(1).map((route) => <Link to={route.to} key={route.to}>{route.label}</Link>)}<Link to="/services/hair">Hair</Link><Link to="/services/nails">Nails</Link><Link to="/services/spa">Spa</Link></nav>
-        <a className="footer-book" href={mapsUrl} target="_blank" rel="noreferrer">Find us in Midrand ↗</a>
+        <a className="footer-book" href={mapsUrl} target="_blank" rel="noreferrer">Find us in Midrand <ArrowGlyph direction="up-right" /></a>
       </div>
       <a className="footer-email" href="mailto:waterfall@luxaura.co.za">waterfall@luxaura.co.za</a>
       <div className="footer-copyright">© Cherished Beauty · Polofields Crossing · Midrand</div>
@@ -311,13 +369,13 @@ function HomePage() {
         <div className="hero-title-wrap">
           <Eyebrow light>A new expression of the familiar</Eyebrow>
           <h1 className="hero-title page-intro">An experience<br /><em>never imagined.</em></h1>
-          <div className="hero-bottomline"><span>A beauty house shaped by detail.</span><a href="#first-light">Discover the house <span>↓</span></a></div>
+          <div className="hero-bottomline"><span>A beauty house shaped by detail.</span><a href="#first-light">Discover the house <span><ArrowGlyph direction="down" /></span></a></div>
         </div>
         <span className="hero-side-note">A HOUSE OF HAIR · NAILS · SPA</span>
       </section>
 
       <section className="first-light section-pad" id="first-light" data-chapter="light">
-        <div className="first-light-copy reveal"><Eyebrow>THE FIRST IMPRESSION</Eyebrow><h2>Beauty, with<br />a point of <em>view.</em></h2><p>Once known as Luxaura. Now, a world with its own name, and a little more room for the details that stay with you.</p><Link className="text-link" to="/about">The story of the house <span>↗</span></Link></div>
+        <div className="first-light-copy reveal"><Eyebrow>THE FIRST IMPRESSION</Eyebrow><h2>Beauty, with<br />a point of <em>view.</em></h2><p>Once known as Luxaura. Now, a world with its own name, and a little more room for the details that stay with you.</p><Link className="text-link" to="/about">The story of the house <span><ArrowGlyph direction="up-right" /></span></Link></div>
         <ImagePanel file="salon-overview.jpg" alt="The salon interior at Cherished Beauty" className="first-light-image" label="THE HOUSE, IN ITS OWN LIGHT" />
         <span className="vertical-note">POLofields · 01 / 04</span>
       </section>
@@ -329,7 +387,7 @@ function HomePage() {
           <ServiceRow number="02" title="Nails" sub="Colour with a little character." file="nail-hero.jpg" alt="Glossy manicure with rose and warm stone detail" to="/services/nails" />
           <ServiceRow number="03" title="Spa" sub="A quieter kind of attention." file="spa-room2.jpg" alt="Private treatment room at Cherished Beauty" to="/services/spa" />
         </div>
-        <Link className="text-link service-world-link" to="/services">Explore the house <span>↗</span></Link>
+        <Link className="text-link service-world-link" to="/services">Explore the house <span><ArrowGlyph direction="up-right" /></span></Link>
       </section>
 
       <section className="rose-chapter section-pad" data-chapter="light">
@@ -339,13 +397,13 @@ function HomePage() {
       </section>
 
       <section className="home-film-chapter" data-chapter="dark">
-        <div className="home-film-copy reveal"><Eyebrow light>THE BRAIDING EDIT · MOVING IMAGE</Eyebrow><h2>Made by<br /><em>hand.</em></h2><p>A little movement from the hair room at Polofields.</p><Link className="text-link" to="/services/hair">Discover the hair room <span>↗</span></Link></div>
+        <div className="home-film-copy reveal"><Eyebrow light>THE BRAIDING EDIT · MOVING IMAGE</Eyebrow><h2>Made by<br /><em>hand.</em></h2><p>A little movement from the hair room at Polofields.</p><Link className="text-link" to="/services/hair">Discover the hair room <span><ArrowGlyph direction="up-right" /></span></Link></div>
         <SilentVideo src="/videos/braids-video.mp4" poster="Braids1.jpeg" className="home-braid-video" label="Braiding, in motion" />
         <span className="home-film-index">01 · THE BRAIDING EDIT</span>
       </section>
 
       <section className="home-work section-pad" data-chapter="light">
-        <div className="home-work-heading reveal"><Eyebrow>THE WORK, UP CLOSE</Eyebrow><h2>Colour with<br /><em>character.</em></h2><Link className="text-link" to="/services/nails">Enter the nail room <span>↗</span></Link></div>
+        <div className="home-work-heading reveal"><Eyebrow>THE WORK, UP CLOSE</Eyebrow><h2>Colour with<br /><em>character.</em></h2><Link className="text-link" to="/services/nails">Enter the nail room <span><ArrowGlyph direction="up-right" /></span></Link></div>
         <NailWork file="bluemercurynails.jpeg" alt="Blue and gold nail art by Cherished Beauty" className="home-work-blue" />
         <NailWork file="beautifulnails.JPG" alt="A polished manicure by Cherished Beauty" className="home-work-detail" />
         <NailWork file="nailsBlue.jpeg" alt="Sculpted blue nail design by Cherished Beauty" className="home-work-blue-alt" />
@@ -369,7 +427,7 @@ function HomePage() {
 }
 
 function ServiceRow({ number, title, sub, file, alt, to }: { number: string; title: string; sub: string; file: string; alt: string; to: string }) {
-  return <Link to={to} className="service-row reveal"><span className="service-number">{number}</span><div className="service-photo"><img src={image(file)} alt={alt} loading="lazy" /></div><div className="service-row-copy"><h3>{title}</h3><span>{sub}</span></div><span className="service-arrow">↗</span></Link>;
+  return <Link to={to} className="service-row reveal"><span className="service-number">{number}</span><div className="service-photo"><img src={image(file)} alt={alt} loading="lazy" /></div><div className="service-row-copy"><h3>{title}</h3><span>{sub}</span></div><span className="service-arrow"><ArrowGlyph direction="up-right" /></span></Link>;
 }
 
 function AboutPage() {
@@ -389,7 +447,7 @@ const disciplines = [
 ];
 function ServicesPage() {
   return <main className="page-transition"><PageIntro eyebrow="THE HOUSE MENU" title="Three ways to" accent="make a moment." copy="Explore the different rooms of Cherished Beauty. Each has its own rhythm; all are found at Polofields Crossing." imageFile="salon-overview.jpg" imageAlt="A glimpse inside Cherished Beauty" />
-    <section className="discipline-list section-pad">{disciplines.map((item) => <Link to={item.to} className={`discipline reveal ${item.align}`} key={item.index}><span className="discipline-index">{item.index} / THE HOUSE</span><div className="discipline-image"><img src={image(item.image)} alt={`${item.title} at Cherished Beauty`} loading="lazy" /></div><div className="discipline-copy"><Eyebrow>{item.line}</Eyebrow><h2>{item.title}<i>↗</i></h2><span>Discover this room</span></div></Link>)}</section>
+    <section className="discipline-list section-pad">{disciplines.map((item) => <Link to={item.to} className={`discipline reveal ${item.align}`} key={item.index}><span className="discipline-index">{item.index} / THE HOUSE</span><div className="discipline-image"><img src={image(item.image)} alt={`${item.title} at Cherished Beauty`} loading="lazy" /></div><div className="discipline-copy"><Eyebrow>{item.line}</Eyebrow><h2>{item.title}<i><ArrowGlyph direction="up-right" /></i></h2><span>Discover this room</span></div></Link>)}</section>
     <BookingStrip />
   </main>;
 }
@@ -426,8 +484,8 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
 
   return <main className={`page-transition discipline-page discipline-${kind}`}>
     <PageIntro eyebrow={item.eyebrow} title={item.title} accent={item.accent} copy={item.copy} imageFile={item.hero} imageAlt={item.heroAlt} />
-    <section className="discipline-story section-pad"><div className="discipline-story-copy reveal"><Eyebrow>AN EDITORIAL IN {kind.toUpperCase()}</Eyebrow><h2>{item.detailTitle}<br /><em>{item.detailAccent}</em></h2><p>For service details, availability and the right appointment for you, speak with the Cherished Beauty team directly.</p><a className="text-link" href="tel:0100234291">Call the studio · 010 023 4291 <span>↗</span></a></div><ImagePanel file={item.detailImage} alt={item.detailAlt} className="discipline-story-image" label={item.eyebrow} /></section>
-    {kind === 'hair' && <section className="braid-feature" aria-label="Braids at Cherished Beauty"><div className="braid-feature-image"><img src={image('Braids1.jpeg')} alt="Close-up of neat, patterned braids at the Cherished Beauty salon" loading="lazy" /></div><div className="braid-feature-copy reveal"><Eyebrow>THE BRAIDING EDIT</Eyebrow><h2>Parting.<br />Pattern.<br /><em>Presence.</em></h2><p>A close look at the craft in every line.</p><a className="text-link" href="https://myappointment.co.za/cgi-bin/myappointment/makeappt.pl?1548333612::">Explore braiding appointments <span>↗</span></a></div><span className="braid-feature-index">HAIR ROOM · 01</span></section>}
+    <section className="discipline-story section-pad"><div className="discipline-story-copy reveal"><Eyebrow>AN EDITORIAL IN {kind.toUpperCase()}</Eyebrow><h2>{item.detailTitle}<br /><em>{item.detailAccent}</em></h2><p>For service details, availability and the right appointment for you, speak with the Cherished Beauty team directly.</p><a className="text-link" href="tel:0100234291">Call the studio · 010 023 4291 <span><ArrowGlyph direction="up-right" /></span></a></div><ImagePanel file={item.detailImage} alt={item.detailAlt} className="discipline-story-image" label={item.eyebrow} /></section>
+    {kind === 'hair' && <section className="braid-feature" aria-label="Braids at Cherished Beauty"><div className="braid-feature-image"><img src={image('Braids1.jpeg')} alt="Close-up of neat, patterned braids at the Cherished Beauty salon" loading="lazy" /></div><div className="braid-feature-copy reveal"><Eyebrow>THE BRAIDING EDIT</Eyebrow><h2>Parting.<br />Pattern.<br /><em>Presence.</em></h2><p>A close look at the craft in every line.</p><a className="text-link" href="https://myappointment.co.za/cgi-bin/myappointment/makeappt.pl?1548333612::">Explore braiding appointments <span><ArrowGlyph direction="up-right" /></span></a></div><span className="braid-feature-index">HAIR ROOM · 01</span></section>}
     {kind === 'hair' && <section className="hair-film-edit" data-chapter="dark"><div className="hair-film-heading reveal"><Eyebrow light>THE BRAIDING EDIT · IN MOTION</Eyebrow><h2>Three studies<br />in <em>braid.</em></h2></div><div className="hair-film-grid"><SilentVideo src="/videos/long-blonde-braids.mp4" poster="Braids1.jpeg" label="Long blonde braids" /><SilentVideo src="/videos/luxury-braid-design.mp4" poster="brownBraids-optimized.jpg" label="Braid design, considered" /><SilentVideo src="/videos/braids-video.mp4" poster="dreadlocksBrown.JPG" label="The braiding edit" /></div></section>}
     {kind === 'hair' && <section className="hair-gallery section-pad"><div className="hair-gallery-heading reveal"><Eyebrow>TEXTURE · LENGTH · FINISH</Eyebrow><h2>Hair, in<br /><em>many forms.</em></h2></div><div className="hair-gallery-grid"><ImagePanel file="wig5.JPG" alt="Curly braids with soft, defined texture" className="hair-look hair-look-curly-braids" label="CURLY BRAIDS" /><ImagePanel file="wigDoll.JPG" alt="Voluminous curly wig styled at Cherished Beauty" className="hair-look hair-look-wig" label="CURLY WIG" /><ImagePanel file="brownBraids-optimized.jpg" alt="Long brown braids with curly ends" className="hair-look hair-look-brown-braids" label="BRAIDS, WITH CURL" /><ImagePanel file="curlyweave.jpeg" alt="Defined curls styled at the salon" className="hair-look hair-look-weave" label="CURLY WEAVE" /><ImagePanel file="dreadlocksBrown.JPG" alt="Brown dreadlocks styled at Cherished Beauty" className="hair-look hair-look-dreadlocks" label="DREADLOCKS" /></div></section>}
     {kind === 'nails' && <section className="nail-gallery-section" aria-labelledby="nail-gallery-heading">
@@ -438,17 +496,17 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
           return <button className={`nail-gallery-item nail-gallery-item-${index + 1} reveal`} type="button" key={file} onClick={() => setActiveNailPhoto(index)} aria-label={`Open nail gallery photograph ${index + 1}`}>
             <img src={image(file)} alt={`Nail design at Cherished Beauty, photograph ${index + 1}`} loading="lazy" />
             <span className="nail-gallery-number">{String(index + 1).padStart(2, '0')} / 10</span>
-            <span className="nail-gallery-expand" aria-hidden="true">↗</span>
+            <span className="nail-gallery-expand" aria-hidden="true"><ArrowGlyph direction="up-right" /></span>
           </button>;
         })}
       </div>
       <div className="nail-gallery-footnote"><span>THE NAIL ROOM</span><span>POLOFIELDS CROSSING · MIDRAND</span></div>
       {activeNailPhoto !== null && <div className="nail-lightbox" role="dialog" aria-modal="true" aria-label={`Nail gallery photograph ${activeNailPhoto + 1}`} onClick={() => setActiveNailPhoto(null)}>
         <button className="nail-lightbox-close" type="button" aria-label="Close gallery" onClick={() => setActiveNailPhoto(null)}>×</button>
-        <button className="nail-lightbox-nav nail-lightbox-prev" type="button" aria-label="Previous photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 9) % 10); }}>←</button>
+        <button className="nail-lightbox-nav nail-lightbox-prev" type="button" aria-label="Previous photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 9) % 10); }}><ArrowGlyph direction="left" /></button>
         <img src={image(`Nails${activeNailPhoto + 1}.jpeg`)} alt={`Nail design at Cherished Beauty, photograph ${activeNailPhoto + 1}`} onClick={(event) => event.stopPropagation()} />
         <span className="nail-lightbox-count">{String(activeNailPhoto + 1).padStart(2, '0')} <i>/</i> 10</span>
-        <button className="nail-lightbox-nav nail-lightbox-next" type="button" aria-label="Next photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 1) % 10); }}>→</button>
+        <button className="nail-lightbox-nav nail-lightbox-next" type="button" aria-label="Next photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 1) % 10); }}><ArrowGlyph direction="right" /></button>
       </div>}
     </section>}
     <section className="menu-chapter" data-chapter="dark"><div className="menu-chapter-top"><Eyebrow light>THE ROOM, AT A GLANCE</Eyebrow><span>POL OFIELDS · {kind.toUpperCase()}</span></div><h2 className="menu-chapter-title">A few of<br /><em>our rituals.</em></h2><div className="ritual-list">{item.categories.map((category, index) => <div className="ritual-line reveal" key={category}><span>0{index + 1}</span><p>{category}</p><i>✳</i></div>)}</div><p className="menu-note">For current service availability and appointment details, please contact the studio.</p></section>
@@ -468,8 +526,8 @@ function ContactPage() {
     setSent(true);
   };
   return <main className="page-transition"><PageIntro eyebrow="THE LAST PAGE, THE FIRST HELLO" title="Come a little" accent="closer." copy="Find us at Polofields Crossing, Midrand. The next good thing can start with a note." imageFile="salon-overview.jpg" imageAlt="A warm view inside the salon" />
-    <section className="contact-layout section-pad" data-chapter="dark"><div className="contact-invitation reveal"><Eyebrow light>FIND THE HOUSE</Eyebrow><h2>We'll be<br />right <em>here.</em></h2><p>Polofields Crossing<br />Polofields Dr<br />Midrand<br />1684</p><a className="contact-phone" href="tel:0100234291">010 023 4291 <span>↗</span></a><a className="contact-map" href={mapsUrl} target="_blank" rel="noreferrer">Open directions <span>↗</span></a><a className="contact-email" href="mailto:waterfall@luxaura.co.za">waterfall@luxaura.co.za <span>↗</span></a></div>
-      <div className="contact-form-wrap reveal"><Eyebrow light>A NOTE TO THE STUDIO</Eyebrow><h3>What can we help you find?</h3><form onSubmit={submit}><label>Your name<input name="name" autoComplete="name" required /></label><label>Email address<input type="email" name="email" autoComplete="email" required /></label><label>Your note<textarea name="message" rows={4} required /></label><button className="luxury-button" type="submit"><span>Compose your note <i>↗</i></span><i>↗</i></button>{sent && <p className="form-note" role="status">Your email app is opening with your note addressed to the studio.</p>}</form></div>
+    <section className="contact-layout section-pad" data-chapter="dark"><div className="contact-invitation reveal"><Eyebrow light>FIND THE HOUSE</Eyebrow><h2>We'll be<br />right <em>here.</em></h2><p>Polofields Crossing<br />Polofields Dr<br />Midrand<br />1684</p><a className="contact-phone" href="tel:0100234291">010 023 4291 <span><ArrowGlyph direction="up-right" /></span></a><a className="contact-map" href={mapsUrl} target="_blank" rel="noreferrer">Open directions <span><ArrowGlyph direction="up-right" /></span></a><a className="contact-email" href="mailto:waterfall@luxaura.co.za">waterfall@luxaura.co.za <span><ArrowGlyph direction="up-right" /></span></a></div>
+      <div className="contact-form-wrap reveal"><Eyebrow light>A NOTE TO THE STUDIO</Eyebrow><h3>What can we help you find?</h3><form onSubmit={submit}><label>Your name<input name="name" autoComplete="name" required /></label><label>Email address<input type="email" name="email" autoComplete="email" required /></label><label>Your note<textarea name="message" rows={4} required /></label><button className="luxury-button" type="submit"><span>Compose your note <i><ArrowGlyph direction="up-right" /></i></span><i><ArrowGlyph direction="up-right" /></i></button>{sent && <p className="form-note" role="status">Your email app is opening with your note addressed to the studio.</p>}</form></div>
     </section>
     <LocationCard />
     <FAQSection />
@@ -478,7 +536,7 @@ function ContactPage() {
 
 function BookingPage() {
   useEffect(() => { window.location.replace(bookingUrl); }, []);
-  return <main className="booking-redirect"><p className="eyebrow">CHERISHED BEAUTY · APPOINTMENTS</p><a href={bookingUrl}>Continue to our booking page <span>↗</span></a></main>;
+  return <main className="booking-redirect"><p className="eyebrow">CHERISHED BEAUTY · APPOINTMENTS</p><a href={bookingUrl}>Continue to our booking page <span><ArrowGlyph direction="up-right" /></span></a></main>;
 }
 
 function PricingPage() {
@@ -487,10 +545,10 @@ function PricingPage() {
     <section className="pricing-document-section section-pad" aria-labelledby="pricing-document-heading">
       <div className="pricing-document-intro reveal">
         <div><Eyebrow>CHERISHED BEAUTY · MIDRAND</Eyebrow><h2 id="pricing-document-heading">The details,<br /><em>in full.</em></h2><p>Browse the current price list below, or open the original PDF in a new tab for a closer look.</p></div>
-        <div className="pricing-document-actions"><a className="luxury-button" href={priceListUrl} target="_blank" rel="noreferrer"><span>View full price list</span><i>↗</i></a><a className="pricing-download-link" href={priceListUrl} download="CB Price List.pdf">Download the PDF <span>↓</span></a></div>
+        <div className="pricing-document-actions"><a className="luxury-button" href={priceListUrl} target="_blank" rel="noreferrer"><span>View full price list</span><i><ArrowGlyph direction="up-right" /></i></a><a className="pricing-download-link" href={priceListUrl} download="CB Price List.pdf">Download the PDF <span><ArrowGlyph direction="down" /></span></a></div>
       </div>
-      <div className="pricing-document-viewer reveal"><iframe src={`${priceListUrl}#view=FitH`} title="Cherished Beauty price list PDF" loading="lazy" /><a className="pricing-viewer-fallback" href={priceListUrl} target="_blank" rel="noreferrer">PDF not displaying? Open the price list in a new tab <span>↗</span></a></div>
-      <div className="pricing-document-foot"><span>THE OFFICIAL CHERISHED BEAUTY PRICE LIST</span><a href="tel:0100234291">Questions? Call 010 023 4291 ↗</a></div>
+      <div className="pricing-document-viewer reveal"><iframe src={`${priceListUrl}#view=FitH`} title="Cherished Beauty price list PDF" loading="lazy" /><a className="pricing-viewer-fallback" href={priceListUrl} target="_blank" rel="noreferrer">PDF not displaying? Open the price list in a new tab <span><ArrowGlyph direction="up-right" /></span></a></div>
+      <div className="pricing-document-foot"><span>THE OFFICIAL CHERISHED BEAUTY PRICE LIST</span><a href="tel:0100234291">Questions? Call 010 023 4291 <ArrowGlyph direction="up-right" /></a></div>
     </section>
   </main>;
 }
@@ -501,7 +559,12 @@ function NotFound() {
 
 function App() {
   usePageMotion();
-  return <><Navbar /><Routes>
+
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+  }, []);
+
+  return <><ScrollToTopOnRouteChange /><Navbar /><Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/about" element={<AboutPage />} />
     <Route path="/services" element={<ServicesPage />} />
@@ -512,7 +575,7 @@ function App() {
     <Route path="/booking" element={<BookingPage />} />
     <Route path="/pricing" element={<PricingPage />} />
     <Route path="*" element={<NotFound />} />
-  </Routes><Footer /><BookingPrompt /><div className="grain" aria-hidden="true" /></>;
+  </Routes><Footer /><BookingPrompt /><BackToTop /><div className="grain" aria-hidden="true" /></>;
 }
 
 createRoot(document.getElementById('root')!).render(<StrictMode><BrowserRouter><App /></BrowserRouter></StrictMode>);

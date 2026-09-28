@@ -1,0 +1,68 @@
+/* Keep directional symbols in text presentation on phones, not Apple Color Emoji. */
+:root,
+:root * {
+  font-variant-emoji: text;
+}
+
+.arrow-glyph {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  overflow: visible;
+}
+
+.arrow-glyph path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.luxury-button > i,
+.text-link > span,
+.nav-location > span,
+.service-arrow,
+.discipline-copy h2 > i,
+.nail-gallery-expand,
+.nail-lightbox-nav,
+.hero-bottomline a > span,
+.back-to-top > span,
+.contact-phone > span,
+.contact-map > span,
+.contact-email > span,
+.footer-topline > a,
+.footer-book,
+.pricing-download-link > span,
+.booking-prompt-close,
+.contact-form-wrap button i,
+.newsletter-form button span {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  font-variant-emoji: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.luxury-button > i,
+.text-link > span,
+.nav-location > span,
+.service-arrow,
+.discipline-copy h2 > i,
+.nail-gallery-expand,
+.nail-lightbox-nav,
+.hero-bottomline a > span,
+.back-to-top > span,
+.contact-phone > span,
+.contact-map > span,
+.contact-email > span,
+.footer-topline > a,
+.footer-book,
+.pricing-download-link > span,
+.booking-prompt-close,
+.contact-form-wrap button i,
+.newsletter-form button span,
+.arrow-glyph {
+  color: currentColor;
+}
