@@ -1,5 +1,5 @@
-import { StrictMode, useEffect, useState } from 'react';
-import type { FormEvent, ReactNode } from 'react';
+import { Fragment, StrictMode, useEffect, useState } from 'react';
+import type { FormEvent, KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
@@ -16,6 +16,7 @@ import './back-to-top.css';
 import './mobile-glyphs.css';
 import './navigation.css';
 import './journal.css';
+import './client-updates.css';
 import '@fontsource/bodoni-moda/400.css';
 import '@fontsource/bodoni-moda/400-italic.css';
 import '@fontsource/dm-sans/400.css';
@@ -25,7 +26,10 @@ import '@fontsource/dm-sans/700.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const imageFiles = import.meta.glob('/assets/images/*.{jpg,jpeg,png,JPG,PNG}', {
+const imageFiles = import.meta.glob([
+  '/assets/images/**/*.{jpg,jpeg,png,JPG,PNG}',
+  '!/assets/images/Hair Images/MaleBraids.jpeg',
+], {
   eager: true,
   query: '?url',
   import: 'default',
@@ -46,6 +50,7 @@ const routes = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Services', to: '/services' },
+  { label: 'Our Gallery', to: '/gallery' },
   { label: 'Journal', to: '/journal' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'Contact', to: '/contact' },
@@ -153,10 +158,20 @@ function Navbar() {
           <img src={image('logo.png')} alt="Cherished Beauty" />
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
-          {routes.map((route) => <Link key={route.to} to={route.to} className={location.pathname === route.to || (route.to !== '/' && location.pathname.startsWith(`${route.to}/`)) ? 'current' : ''}>{route.label}</Link>)}
+          {routes.map((route) => route.to === '/services'
+            ? <div className="services-dropdown" key={route.to}>
+              <Link to={route.to} className={location.pathname === route.to || location.pathname.startsWith(`${route.to}/`) ? 'current' : ''} aria-haspopup="true">Services</Link>
+              <nav className="services-submenu" aria-label="Services navigation">
+                <Link to="/services/hair">Hair</Link>
+                <Link to="/services/nails">Nails</Link>
+                <Link to="/services/spa">Spa</Link>
+                <a href="/#products">Mizani Products</a>
+              </nav>
+            </div>
+            : <Link key={route.to} to={route.to} className={location.pathname === route.to || (route.to !== '/' && location.pathname.startsWith(`${route.to}/`)) ? 'current' : ''}>{route.label}</Link>)}
         </nav>
         <div className="nav-right">
-          <a className="nav-location" href={mapsUrl} target="_blank" rel="noreferrer">Midrand <span><ArrowGlyph direction="up-right" /></span></a>
+          <a className="nav-location" href={mapsUrl} target="_blank" rel="noreferrer" aria-label="Cherished Beauty location on Google Maps"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" /><circle cx="12" cy="10" r="2.2" /></svg><span>Midrand</span></a>
           <LuxuryButton to="/booking" compact>Book a visit</LuxuryButton>
           <button className={`menu-toggle ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen}>
             <span /><span />
@@ -166,7 +181,15 @@ function Navbar() {
       <div className={`mobile-panel ${menuOpen ? 'is-open' : ''}`} aria-hidden={!menuOpen}>
         <span className="mobile-index">01 · THE HOUSE</span>
         <nav aria-label="Mobile navigation">
-          {routes.map((route, index) => <Link key={route.to} to={route.to} onClick={() => setMenuOpen(false)}><span>0{index + 1}</span>{route.label}</Link>)}
+          {routes.map((route, index) => <Fragment key={route.to}>
+            <Link to={route.to} onClick={() => setMenuOpen(false)}><span>0{index + 1}</span>{route.label}</Link>
+            {route.to === '/services' && <div className="mobile-services-submenu" aria-label="Services navigation">
+              <Link to="/services/hair" onClick={() => setMenuOpen(false)}>Hair</Link>
+              <Link to="/services/nails" onClick={() => setMenuOpen(false)}>Nails</Link>
+              <Link to="/services/spa" onClick={() => setMenuOpen(false)}>Spa</Link>
+              <a href="/#products" onClick={() => setMenuOpen(false)}>Mizani Products</a>
+            </div>}
+          </Fragment>)}
           <a href={bookingUrl} onClick={() => setMenuOpen(false)}><span>07</span>Book a visit</a>
         </nav>
         <p>Polofields Crossing<br />Midrand 1684, South Africa</p>
@@ -218,9 +241,9 @@ function NailWork({ file, alt, className = '' }: { file: string; alt: string; cl
   return <figure className={`nail-work ${className}`}><img src={image(file)} alt={alt} loading="lazy" /><figcaption>NAIL ROOM <span>· CHERISHED BEAUTY</span></figcaption></figure>;
 }
 
-function PageIntro({ eyebrow, title, accent, copy, imageFile, imageAlt }: { eyebrow: string; title: string; accent: string; copy: string; imageFile: string; imageAlt: string }) {
+function PageIntro({ eyebrow, title, accent, copy, imageFile, imageAlt, className = '' }: { eyebrow: string; title: string; accent: string; copy: string; imageFile: string; imageAlt: string; className?: string }) {
   return (
-    <section className="page-hero" style={{ backgroundImage: `url("${image(imageFile)}")` }}>
+    <section className={`page-hero ${className}`} data-chapter="dark" style={{ backgroundImage: `url("${image(imageFile)}")` }}>
       <div className="page-hero-shade" />
       <div className="page-hero-copy">
         <Eyebrow light>{eyebrow}</Eyebrow>
@@ -242,17 +265,14 @@ function LocationCard() {
 }
 
 const googleReviews = [
-  { name: 'Gugulethu Portia', quote: 'I had an amazing experience at LuxAura. The atmosphere is welcoming, professional, and refreshing. The staff are friendly, attentive, and truly care about their clients. The service I received was exceptional, and it is clear that the new management has brought positive changes. I left feeling satisfied and looking great. I highly recommend this salon to anyone looking for quality service and a wonderful experience. Keep up the excellent work!', href: 'https://www.google.com/maps/contrib/108000828792422156658/reviews?hl=en-GB' },
-  { name: 'Nolwazi Sikhakhane', quote: 'I had a wonderful experience at LuxAura Boutique Salon Waterfall. The staff were friendly and professional, and they made me feel welcome from the moment I arrived. The salon is clean, beautiful, and relaxing. I\'m very happy with the service I received and would definitely recommend it to anyone looking for quality beauty treatments.', href: 'https://www.google.com/maps/contrib/116618499081320116486/reviews?hl=en-GB' },
   { name: 'Fanele Ntombela', quote: 'What an amazing experience I had. Love the new management. Definitely a place to try, I bet you won’t go anywhere after having an experience there.', href: 'https://www.google.com/maps/contrib/110917794230596316378/reviews?hl=en-GB' },
   { name: 'Kayakazi Sandile', quote: 'Was there 2 weeks ago. Had such a great experience. The staff are kind and professional. Thanks to the new management, you guys know what you’re doing.', href: 'https://www.google.com/maps/contrib/100594492899233719208/reviews?hl=en-GB' },
   { name: 'Tendani Musekwa', quote: 'The staff were very friendly, the salon is exceptionally clean and the playlist was too good.', href: mapsUrl },
-  { name: 'Nobuhle Vilakazi', quote: 'I had a great experience at this establishment. The client service is 5 star. I’ve been doing my nails here for a while and have always had a lady named Melissa do them. She always goes over and above to make sure my experience is pleasurable and to my satisfaction. Her skills are exceptional and because of her I am a loyal client. The LuxAura overall places their clients first and they will go over and above to fix any situation. What a pleasure.', href: 'https://www.google.com/maps/contrib/111663044566812201373/reviews?hl=en-GB' },
   { name: 'Zizipo Ndzingo', quote: 'I had an amazing experience… The best of the best.', href: 'https://www.google.com/maps/contrib/112491699372939043530/reviews?hl=en-GB' },
 ];
 
 function ReviewsSection() {
-  return <section className="reviews-section section-pad"><div className="reviews-heading reveal"><Eyebrow>THE WORD, FROM OUR GUESTS</Eyebrow><h2>Seven notes<br />from <em>Google.</em></h2><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Read Cherished Beauty on Google <span><ArrowGlyph direction="up-right" /></span></a></div><div className="reviews-list">{googleReviews.map((review, index) => <article className="review-quote reveal" key={review.name}><span className="review-index">0{index + 1} / 07</span><blockquote>“{review.quote}”</blockquote><a href={review.href} target="_blank" rel="noreferrer">{review.name} <span>· GOOGLE REVIEW <ArrowGlyph direction="up-right" /></span></a></article>)}</div></section>;
+  return <section className="reviews-section section-pad"><div className="reviews-heading reveal"><Eyebrow>THE WORD, FROM OUR GUESTS</Eyebrow><h2>Four notes<br />from <em>Google.</em></h2><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Read Cherished Beauty on Google <span><ArrowGlyph direction="up-right" /></span></a></div><div className="reviews-list">{googleReviews.map((review, index) => <article className="review-quote reveal" key={review.name}><span className="review-index">0{index + 1} / 04</span><blockquote>“{review.quote}”</blockquote><a href={review.href} target="_blank" rel="noreferrer">{review.name} <span>· GOOGLE REVIEW <ArrowGlyph direction="up-right" /></span></a></article>)}</div></section>;
 }
 
 const faqItems = [
@@ -277,6 +297,68 @@ function NewsletterSignup() {
     setSubmitted(true);
   };
   return <div className="newsletter-block"><div><Eyebrow light>A LETTER, NOW AND THEN</Eyebrow><h2>A little beauty<br /><em>in your inbox.</em></h2><p>Occasional notes from the house. No noise.</p></div><form className="newsletter-form" onSubmit={submit}><label htmlFor="newsletter-email">Your email address</label><div><input id="newsletter-email" name="newsletter-email" type="email" autoComplete="email" placeholder="you@example.com" required /><button type="submit" aria-label="Sign up for the newsletter">Join <span><ArrowGlyph direction="up-right" /></span></button></div>{submitted && <p className="newsletter-status" role="status">Your email app is opening with your sign-up request addressed to us.</p>}</form></div>;
+}
+
+type WorkPhoto = { file: string; alt: string };
+
+const nailPhotos: WorkPhoto[] = [
+  ...Array.from({ length: 10 }, (_, index) => ({
+    file: `Nails${index + 1}.jpeg`,
+    alt: `Nail design at Cherished Beauty, photograph ${index + 1}`,
+  })),
+  { file: 'Nails/BlueIllusionNails.jpg', alt: 'Blue illusion nail design' },
+  { file: 'Nails/DesignerNails.JPG', alt: 'Designer nail art' },
+  { file: 'Nails/NailIntroduction.JPG', alt: 'Nail design from Cherished Beauty' },
+  { file: 'Nails/PinkNailsWithAFloweronTop.JPG', alt: 'Pink nails with a flower detail' },
+  { file: 'Nails/PinkYSignNails.JPG', alt: 'Pink nail design' },
+  { file: 'Nails/TransparantNailgelWithWhiteTips.jpg', alt: 'Clear nail gel with white tips' },
+  { file: 'NailsAndFlowers.JPG', alt: 'Nail design with flowers' },
+  { file: 'Pedicure/NailPedicure.JPG', alt: 'Pedicure at Cherished Beauty' },
+];
+
+const hairPhotos: WorkPhoto[] = [
+  { file: 'Hair Images/BeardHaircutAndBraids.jpeg', alt: 'Beard, haircut, and braids' },
+  { file: 'Hair Images/BlondeLongBraids.jpeg', alt: 'Long blonde braids' },
+  { file: 'Hair Images/FemaleWhiteBraidsSideProfile.jpeg', alt: 'Braids shown in side profile' },
+  { file: 'Hair Images/MensStitchDreadlockBraids.PNG', alt: 'Men’s stitch dreadlock braids' },
+  { file: 'Hair Images/StitchDreadlockBraids.PNG', alt: 'Stitch dreadlock braids' },
+  { file: 'Hair Images/WeaveCollage.PNG', alt: 'Weave styles collage' },
+  { file: 'Hair Images/WeaveCollage2.PNG', alt: 'Weave styles collage' },
+];
+
+const spaPhotos: WorkPhoto[] = [
+  { file: 'SPA/CandlesAndTowelImg.JPG', alt: 'Candles and towels prepared for a spa visit' },
+  { file: 'SPA/HotStones.JPG', alt: 'Hot stones used in a spa treatment' },
+  { file: 'SPA/MassageAndSpaProducts.JPG', alt: 'Spa and massage products' },
+];
+
+function WorkGallerySection({ title, photos }: { title: string; photos: WorkPhoto[] }) {
+  return <section className="work-gallery-section section-pad">
+    <div className="work-gallery-heading reveal"><Eyebrow>CHERISHED BEAUTY · IN FOCUS</Eyebrow><h2>{title}</h2></div>
+    <div className="work-gallery-grid">{photos.map((photo) => <figure className="work-gallery-item reveal" key={photo.file}>
+      <img src={image(photo.file)} alt={photo.alt} loading="lazy" decoding="async" />
+      <figcaption>{photo.alt}</figcaption>
+    </figure>)}</div>
+  </section>;
+}
+
+function OurGalleryPage() {
+  return <main className="page-transition">
+    <PageIntro eyebrow="CHERISHER’S WORK" title="The work," accent="up close." copy="A closer look at hair, nail, pedicure, and spa work at Cherished Beauty." imageFile="NailsAndFlowers.JPG" imageAlt="Nail art with a floral detail" />
+    <WorkGallerySection title="Hair, shaped by hand." photos={hairPhotos} />
+    <WorkGallerySection title="Colour, form & finish." photos={nailPhotos} />
+    <WorkGallerySection title="A quieter kind of care." photos={spaPhotos} />
+    <BookingStrip title="A visit, made yours." />
+  </main>;
+}
+
+function ProductsSection() {
+  const brands = ['Mizani', 'Gelish', 'Lustik', 'Dark and Lovely', 'Milk Solutions', 'Xpression', 'Darling'];
+
+  return <section className="products-section section-pad" id="products" aria-labelledby="products-heading">
+    <div className="products-copy reveal"><Eyebrow>IN THE STUDIO</Eyebrow><h2 id="products-heading">Products<br /><em>we use.</em></h2><p>A selection of the products used across our salon services.</p><ul>{brands.map((brand) => <li key={brand}>{brand}</li>)}<li>And more</li></ul></div>
+    <figure className="products-image reveal"><img src={image('MizaniProducts.PNG')} alt="Mizani products at Cherished Beauty" loading="lazy" decoding="async" /></figure>
+  </section>;
 }
 
 function BookingPrompt() {
@@ -365,10 +447,10 @@ function Footer() {
 function HomePage() {
   return (
     <main>
-      <section className="home-hero" data-chapter="light">
-        <div className="hero-photo" style={{ backgroundImage: `url("${image('CherishedBeautyBalloons.PNG')}")` }} />
+      <section className="home-hero" data-chapter="dark">
+        <div className="hero-photo" style={{ backgroundImage: `url("${image('CoverPage.jpeg')}")` }} />
         <div className="hero-surface" />
-        <div className="hero-meta"><span>POLOFIELDS CROSSING · MIDRAND</span><span>FORMERLY LUXAURA</span></div>
+        <div className="hero-meta"><span>CHERISHED BEAUTY</span><span>FORMERLY LUXAURA</span></div>
         <div className="hero-title-wrap">
           <Eyebrow light>A new expression of the familiar</Eyebrow>
           <h1 className="hero-title page-intro">An experience<br /><em>never imagined.</em></h1>
@@ -399,7 +481,7 @@ function HomePage() {
       <section className="service-world section-pad" data-chapter="light">
         <div className="section-heading reveal"><Eyebrow>A STUDY IN THREE PARTS</Eyebrow><h2>Different rituals.<br /><em>One point of view.</em></h2><span className="section-counter">01 / 03</span></div>
         <div className="service-list">
-          <ServiceRow number="01" title="Hair" sub="Texture. Shape. Movement." file="hair-silk-profile.jpg" alt="Sleek, glossy hair at the Cherished Beauty salon" to="/services/hair" />
+          <ServiceRow number="01" title="Hair" sub="Texture. Shape. Movement." file="Hair Images/BlondeLongBraids.jpeg" alt="Long blonde braids styled at Cherished Beauty" to="/services/hair" />
           <ServiceRow number="02" title="Nails" sub="Colour with a little character." file="nail-hero.jpg" alt="Glossy manicure with rose and warm stone detail" to="/services/nails" />
           <ServiceRow number="03" title="Spa" sub="A quieter kind of attention." file="spa-room2.jpg" alt="Private treatment room at Cherished Beauty" to="/services/spa" />
         </div>
@@ -427,6 +509,7 @@ function HomePage() {
         <span className="home-work-note">THE NAIL ROOM · A FEW RECENT DETAILS</span>
       </section>
 
+      <ProductsSection />
       <ReviewsSection />
 
       <section className="home-evening" data-chapter="dark">
@@ -486,12 +569,11 @@ function ServiceRow({ number, title, sub, file, alt, to }: { number: string; tit
 
 function AboutPage() {
   return <main className="page-transition">
-    <PageIntro eyebrow="A NAME, RECONSIDERED" title="Before Cherished" accent="there was Luxaura." copy="A familiar place. A new name. The beginning of a more personal point of view." imageFile="salon-hair-overview.jpg" imageAlt="An overview of the salon" />
+    <PageIntro eyebrow="A NAME, RECONSIDERED" title="Before Cherished" accent="there was Luxaura." copy="A familiar place. A new name. The beginning of a more personal point of view." imageFile="CherishedBeautySalon.PNG" imageAlt="The Cherished Beauty salon exterior" className="about-page-hero" />
 
     <section className="about-origin section-pad">
       <div className="origin-heading reveal"><Eyebrow>THE FIRST CHAPTER</Eyebrow><h2>Before the name,<br />there was the <em>feeling.</em></h2></div>
-      <ImagePanel file="salon-hair-side.jpg" alt="A view across the Cherished Beauty hair studio" className="origin-image" />
-      <p className="origin-copy reveal">Luxaura became Cherished Beauty. The address stayed: Polofields Crossing. What matters most stayed too: a thoughtful welcome, a considered room, and time set aside for you.</p>
+      <p className="origin-copy reveal">The salon at Polofields Crossing is now Cherished Beauty. The team brings professional skill, thoughtful care, and a warm welcome to every visit.</p>
     </section>
 
     <section className="section-pad" data-chapter="light">
@@ -547,12 +629,12 @@ function AboutPage() {
 }
 
 const disciplines = [
-  { index: '01', title: 'Hair', line: 'Texture · shape · movement', image: 'hair-silk-back.jpg', to: '/services/hair', align: 'left' },
+  { index: '01', title: 'Hair', line: 'Texture · shape · movement', image: 'Hair Images/BlondeLongBraids.jpeg', to: '/services/hair', align: 'left' },
   { index: '02', title: 'Nails', line: 'Colour · form · finish', image: 'nail-section2.jpg', to: '/services/nails', align: 'right' },
   { index: '03', title: 'Spa', line: 'Skin · stillness · space', image: 'spa-room1.jpg', to: '/services/spa', align: 'left' },
 ];
 function ServicesPage() {
-  return <main className="page-transition"><PageIntro eyebrow="THE HOUSE MENU" title="Three ways to" accent="make a moment." copy="Explore the different rooms of Cherished Beauty. Each has its own rhythm; all are found at Polofields Crossing." imageFile="salon-overview.jpg" imageAlt="A glimpse inside Cherished Beauty" />
+  return <main className="page-transition"><section className="services-page-heading"><Eyebrow>THE HOUSE MENU</Eyebrow><h1 className="page-intro">Three ways to<br /><em>make a moment.</em></h1><p className="page-intro">Explore the different rooms of Cherished Beauty. Each has its own rhythm; all are found at Polofields Crossing.</p></section>
     <section className="discipline-list section-pad">{disciplines.map((item) => <Link to={item.to} className={`discipline reveal ${item.align}`} key={item.index}><span className="discipline-index">{item.index} / THE HOUSE</span><div className="discipline-image"><img src={image(item.image)} alt={`${item.title} at Cherished Beauty`} loading="lazy" /></div><div className="discipline-copy"><Eyebrow>{item.line}</Eyebrow><h2>{item.title}<i><ArrowGlyph direction="up-right" /></i></h2><span>Discover this room</span></div></Link>)}</section>
     <BookingStrip />
   </main>;
@@ -560,13 +642,13 @@ function ServicesPage() {
 
 const disciplinePages = {
   hair: {
-    eyebrow: 'THE HAIR ROOM', title: 'Hair,', accent: 'in its element.', copy: 'Texture, shape and movement, considered in the chair and finished in the mirror.', hero: 'hair-hero.jpg', heroAlt: 'Hair tools and styling pieces arranged on dark stone', detailImage: 'hair-silk-back.jpg', detailAlt: 'A glossy, smooth hair finish', detailTitle: 'A study in', detailAccent: 'movement.', categories: ['Braiding & curls', 'Silk press & styling', 'Treatments & relaxers', 'Weaves & natural hair'], second: 'salon-hair-stations.jpg', secondAlt: 'Hair styling stations at the studio',
+    eyebrow: 'THE HAIR ROOM', title: 'Hair,', accent: 'in its element.', copy: 'Texture, shape and movement, considered in the chair and finished in the mirror.', hero: 'Hair Images/BlondeLongBraids.jpeg', heroAlt: 'Long blonde braids styled at Cherished Beauty', detailImage: 'hair-silk-back.jpg', detailAlt: 'A glossy, smooth hair finish', detailTitle: 'A study in', detailAccent: 'movement.', categories: ['Braiding & curls', 'Silk press & styling', 'Treatments & relaxers', 'Weaves & natural hair'], second: 'salon-hair-stations.jpg', secondAlt: 'Hair styling stations at the studio',
   },
   nails: {
     eyebrow: 'THE NAIL ROOM', title: 'The detail', accent: 'changes everything.', copy: 'A considered palette. A steady hand. A finish that feels entirely your own.', hero: 'nail-hero.jpg', heroAlt: 'A deep rose manicure with fine gold details', detailImage: 'nail-section.jpg', detailAlt: 'The polish collection in the nail studio', detailTitle: 'Colour, with', detailAccent: 'intention.', categories: ['Manicure & gel', 'Acrylic & polygel', 'Pedicure', 'Nail art & finishing'], second: 'nail-section2.jpg', secondAlt: 'The colour library at Cherished Beauty',
   },
   spa: {
-    eyebrow: 'THE TREATMENT ROOM', title: 'A softer', accent: 'kind of hour.', copy: 'A quiet room at Polofields Crossing. Time set aside for skin, body and a slower pace.', hero: 'spa-room2.jpg', heroAlt: 'The softly lit private treatment room', detailImage: 'spa-room1.jpg', detailAlt: 'Treatment bed and delicate details in the spa room', detailTitle: 'The outside', detailAccent: 'can wait.', categories: ['Facials', 'Body care', 'Waxing'], second: 'spa-room1.jpg', secondAlt: 'The treatment room prepared for a visit',
+    eyebrow: 'THE TREATMENT ROOM', title: 'A softer', accent: 'kind of hour.', copy: 'A quiet room at Polofields Crossing. Time set aside for body care and a slower pace.', hero: 'SPA/CandlesAndTowelImg.JPG', heroAlt: 'Candles and towels prepared for a spa visit', detailImage: 'SPA/HotStones.JPG', detailAlt: 'Hot stones used in a spa treatment', detailTitle: 'The outside', detailAccent: 'can wait.', categories: ['Body massage', 'Body care', 'Waxing'], second: 'SPA/MassageAndSpaProducts.JPG', secondAlt: 'Spa and massage products at Cherished Beauty',
   },
 };
 function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
@@ -577,8 +659,8 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
     if (activeNailPhoto === null) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setActiveNailPhoto(null);
-      if (event.key === 'ArrowRight') setActiveNailPhoto((index) => index === null ? null : (index + 1) % 10);
-      if (event.key === 'ArrowLeft') setActiveNailPhoto((index) => index === null ? null : (index + 9) % 10);
+      if (event.key === 'ArrowRight') setActiveNailPhoto((index) => index === null ? null : (index + 1) % nailPhotos.length);
+      if (event.key === 'ArrowLeft') setActiveNailPhoto((index) => index === null ? null : (index + nailPhotos.length - 1) % nailPhotos.length);
     };
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
@@ -595,17 +677,16 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
     {kind === 'hair' && <section className="hair-film-edit" data-chapter="dark"><div className="hair-film-heading reveal"><Eyebrow light>THE BRAIDING EDIT · IN MOTION</Eyebrow><h2>Three studies<br />in <em>braid.</em></h2></div><div className="hair-film-grid"><SilentVideo src="/videos/long-blonde-braids.mp4" poster="Braids1.jpeg" label="Long blonde braids" /><SilentVideo src="/videos/luxury-braid-design.mp4" poster="brownBraids-optimized.jpg" label="Braid design, considered" /><SilentVideo src="/videos/braids-video.mp4" poster="dreadlocksBrown.JPG" label="The braiding edit" /></div></section>}
     {kind === 'hair' && <section className="hair-gallery section-pad"><div className="hair-gallery-heading reveal"><Eyebrow>TEXTURE · LENGTH · FINISH</Eyebrow><h2>Hair, in<br /><em>many forms.</em></h2></div><div className="hair-gallery-grid"><ImagePanel file="wig5.JPG" alt="Curly braids with soft, defined texture" className="hair-look hair-look-curly-braids" label="CURLY BRAIDS" /><ImagePanel file="wigDoll.JPG" alt="Voluminous curly wig styled at Cherished Beauty" className="hair-look hair-look-wig" label="CURLY WIG" /><ImagePanel file="brownBraids-optimized.jpg" alt="Long brown braids with curly ends" className="hair-look hair-look-brown-braids" label="BRAIDS, WITH CURL" /><ImagePanel file="curlyweave.jpeg" alt="Defined curls styled at the salon" className="hair-look hair-look-weave" label="CURLY WEAVE" /><ImagePanel file="dreadlocksBrown.JPG" alt="Brown dreadlocks styled at Cherished Beauty" className="hair-look hair-look-dreadlocks" label="DREADLOCKS" /></div></section>}
     {kind === 'nails' && <section className="discipline-story section-pad" style={{ paddingTop: '4rem' }}>
-      <div className="discipline-story-copy reveal"><Eyebrow>OUR NAIL TECHNICIAN</Eyebrow><h2>Louisa, with a<br /><em>steady hand.</em></h2><p>From precise shaping to polished finishing, Louisa brings calm confidence and a sharp eye for detail to every appointment.</p></div>
-      <ImagePanel file="LousiaNailTech.PNG" alt="Louisa creating a manicure at Cherished Beauty" className="discipline-story-image" label="LOUISA · NAIL TECHNICIAN" />
+      <div className="discipline-story-copy reveal"><Eyebrow>THE CHERISHED TEAM</Eyebrow><h2>Care in<br /><em>every detail.</em></h2><p>Our team brings professional skills, thoughtful care, and attention to detail to each client experience.</p></div>
+      <ImagePanel file="staffbraiding.PNG" alt="A team member braiding a client's hair at the salon" className="discipline-story-image" label="THE CHERISHED TEAM · AT WORK" />
     </section>}
     {kind === 'nails' && <section className="nail-gallery-section" aria-labelledby="nail-gallery-heading">
       <div className="nail-gallery-heading reveal"><Eyebrow>THE NAIL ROOM · IN FOCUS</Eyebrow><h2 id="nail-gallery-heading">Colour, form<br /><em>&amp; finish.</em></h2><p>A closer look at the details, from Cherished Beauty.</p></div>
       <div className="nail-gallery-grid">
-        {Array.from({ length: 10 }, (_, index) => {
-          const file = `Nails${index + 1}.jpeg`;
-          return <button className={`nail-gallery-item nail-gallery-item-${index + 1} reveal`} type="button" key={file} onClick={() => setActiveNailPhoto(index)} aria-label={`Open nail gallery photograph ${index + 1}`}>
-            <img src={image(file)} alt={`Nail design at Cherished Beauty, photograph ${index + 1}`} loading="lazy" />
-            <span className="nail-gallery-number">{String(index + 1).padStart(2, '0')} / 10</span>
+        {nailPhotos.map((photo, index) => {
+          return <button className={`nail-gallery-item nail-gallery-item-${index + 1} reveal`} type="button" key={photo.file} onClick={() => setActiveNailPhoto(index)} aria-label={`Open nail gallery photograph ${index + 1}`}>
+            <img src={image(photo.file)} alt={photo.alt} loading="lazy" />
+            <span className="nail-gallery-number">{String(index + 1).padStart(2, '0')} / {String(nailPhotos.length).padStart(2, '0')}</span>
             <span className="nail-gallery-expand" aria-hidden="true"><ArrowGlyph direction="up-right" /></span>
           </button>;
         })}
@@ -613,13 +694,15 @@ function DisciplinePage({ kind }: { kind: keyof typeof disciplinePages }) {
       <div className="nail-gallery-footnote"><span>THE NAIL ROOM</span><span>POLOFIELDS CROSSING · MIDRAND</span></div>
       {activeNailPhoto !== null && <div className="nail-lightbox" role="dialog" aria-modal="true" aria-label={`Nail gallery photograph ${activeNailPhoto + 1}`} onClick={() => setActiveNailPhoto(null)}>
         <button className="nail-lightbox-close" type="button" aria-label="Close gallery" onClick={() => setActiveNailPhoto(null)}><ArrowGlyph direction="left" /></button>
-        <button className="nail-lightbox-nav nail-lightbox-prev" type="button" aria-label="Previous photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 9) % 10); }}><ArrowGlyph direction="left" /></button>
-        <img src={image(`Nails${activeNailPhoto + 1}.jpeg`)} alt={`Nail design at Cherished Beauty, photograph ${activeNailPhoto + 1}`} onClick={(event) => event.stopPropagation()} />
-        <span className="nail-lightbox-count">{String(activeNailPhoto + 1).padStart(2, '0')} <i>/</i> 10</span>
-        <button className="nail-lightbox-nav nail-lightbox-next" type="button" aria-label="Next photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 1) % 10); }}><ArrowGlyph direction="right" /></button>
+        <button className="nail-lightbox-nav nail-lightbox-prev" type="button" aria-label="Previous photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + nailPhotos.length - 1) % nailPhotos.length); }}><ArrowGlyph direction="left" /></button>
+        <img src={image(nailPhotos[activeNailPhoto].file)} alt={nailPhotos[activeNailPhoto].alt} onClick={(event) => event.stopPropagation()} />
+        <span className="nail-lightbox-count">{String(activeNailPhoto + 1).padStart(2, '0')} <i>/</i> {String(nailPhotos.length).padStart(2, '0')}</span>
+        <button className="nail-lightbox-nav nail-lightbox-next" type="button" aria-label="Next photograph" onClick={(event) => { event.stopPropagation(); setActiveNailPhoto((activeNailPhoto + 1) % nailPhotos.length); }}><ArrowGlyph direction="right" /></button>
       </div>}
     </section>}
-    <section className="menu-chapter" data-chapter="dark"><div className="menu-chapter-top"><Eyebrow light>THE ROOM, AT A GLANCE</Eyebrow><span>POL OFIELDS · {kind.toUpperCase()}</span></div><h2 className="menu-chapter-title">A few of<br /><em>our rituals.</em></h2><div className="ritual-list">{item.categories.map((category, index) => <div className="ritual-line reveal" key={category}><span>0{index + 1}</span><p>{category}</p><i aria-hidden="true"><ArrowGlyph direction="up-right" /></i></div>)}</div><p className="menu-note">For current service availability and appointment details, please contact the studio.</p></section>
+    {kind === 'hair' && <WorkGallerySection title="Hair, in many forms." photos={hairPhotos} />}
+    {kind === 'spa' && <WorkGallerySection title="A quieter kind of care." photos={spaPhotos} />}
+    <section className="menu-chapter" data-chapter="dark"><div className="menu-chapter-top"><Eyebrow light>THE ROOM, AT A GLANCE</Eyebrow><span>POLOFIELDS · {kind.toUpperCase()}</span></div><h2 className="menu-chapter-title">A few of<br /><em>our rituals.</em></h2><div className="ritual-list">{item.categories.map((category, index) => <div className="ritual-line reveal" key={category}><span>0{index + 1}</span><p>{category}</p><i aria-hidden="true"><ArrowGlyph direction="up-right" /></i></div>)}</div><p className="menu-note">{kind === 'spa' ? 'Body massage pricing and durations are being prepared. Please contact the studio for current details.' : 'For current service availability and appointment details, please contact the studio.'}</p></section>
     <section className="discipline-last"><ImagePanel file={item.second} alt={item.secondAlt} className="discipline-last-image" /><div className="discipline-last-copy reveal"><Eyebrow>AT POLOFIELDS CROSSING</Eyebrow><p>Made of<br />small, good<br /><em>details.</em></p><LuxuryButton to="/booking">Ask about a visit</LuxuryButton></div></section>
     <BookingStrip title="Your time, your way." />
   </main>;
@@ -635,7 +718,7 @@ function ContactPage() {
     window.location.href = `mailto:waterfall@luxaura.co.za?subject=${subject}&body=${body}`;
     setSent(true);
   };
-  return <main className="page-transition"><PageIntro eyebrow="THE LAST PAGE, THE FIRST HELLO" title="Come a little" accent="closer." copy="Find us at Polofields Crossing, Midrand. The next good thing can start with a note." imageFile="salon-overview.jpg" imageAlt="A warm view inside the salon" />
+  return <main className="page-transition">
     <section className="contact-layout section-pad" data-chapter="dark"><div className="contact-invitation reveal"><Eyebrow light>FIND THE HOUSE</Eyebrow><h2>We'll be<br />right <em>here.</em></h2><p>Polofields Crossing<br />Polofields Dr<br />Midrand<br />1684</p><a className="contact-phone" href="tel:0100234291">010 023 4291 <span><ArrowGlyph direction="up-right" /></span></a><a className="contact-map" href={mapsUrl} target="_blank" rel="noreferrer">Open directions <span><ArrowGlyph direction="up-right" /></span></a><a className="contact-email" href="mailto:waterfall@luxaura.co.za">waterfall@luxaura.co.za <span><ArrowGlyph direction="up-right" /></span></a></div>
       <div className="contact-form-wrap reveal"><Eyebrow light>A NOTE TO THE STUDIO</Eyebrow><h3>What can we help you find?</h3><form onSubmit={submit}><label>Your name<input name="name" autoComplete="name" required /></label><label>Email address<input type="email" name="email" autoComplete="email" required /></label><label>Your note<textarea name="message" rows={4} required /></label><button className="luxury-button" type="submit"><span>Compose your note <i><ArrowGlyph direction="up-right" /></i></span><i><ArrowGlyph direction="up-right" /></i></button>{sent && <p className="form-note" role="status">Your email app is opening with your note addressed to the studio.</p>}</form></div>
     </section>
@@ -649,15 +732,191 @@ function BookingPage() {
   return <main className="booking-redirect"><p className="eyebrow">CHERISHED BEAUTY · APPOINTMENTS</p><a href={bookingUrl}>Continue to our booking page <span><ArrowGlyph direction="up-right" /></span></a></main>;
 }
 
+type PriceGroup = { title: string; rows: { service: string; price: string }[] };
+
+const nailPriceGroups: PriceGroup[] = [
+  { title: 'Pedicures', rows: [
+    { service: 'Express Pedi', price: 'R380' },
+    { service: 'Pedi & Gel Polish', price: 'R550' },
+    { service: 'Pedicure', price: 'R400' },
+    { service: 'Heel Peel Pedi', price: 'R600' },
+    { service: 'Acrylic on Big Toes', price: 'R200' },
+    { service: 'Add Paraffin Wax', price: 'R200' },
+    { service: 'Add Clear Topcoat', price: 'R80' },
+    { service: 'Soak Off Toes', price: 'R100' },
+    { service: 'Soak Off Only on Hands/Feet', price: 'R130' },
+  ] },
+  { title: 'Manicure', rows: [
+    { service: 'Mani', price: 'R300' },
+    { service: 'Men’s Mani with Gel Coat', price: 'R320' },
+    { service: 'Shape, Buff and Shine', price: 'R200' },
+    { service: 'Mani with Gel', price: 'R600' },
+    { service: 'Mani with Nail Polish', price: 'R450' },
+    { service: 'Add Clear Topcoat', price: 'R100' },
+    { service: 'Add Scrub', price: 'R150' },
+    { service: 'Add Paraffin Wax', price: 'R200' },
+  ] },
+  { title: 'Acrylic', rows: [
+    { service: 'Acrylic', price: 'R560' },
+    { service: 'Acrylic Sculpture / Tips / Polygel (1–3)', price: 'R560' },
+    { service: 'Acrylic Sculpture / Tips / Polygel (4–6)', price: 'R660' },
+    { service: 'Acrylic Sculpture / Tips / Polygel (7+)', price: 'R720' },
+    { service: 'Acrylic Overlay', price: 'R500' },
+    { service: 'Add Manicure', price: 'R250' },
+    { service: 'Add Gel', price: 'R150' },
+    { service: 'File Down / Shorten / Reshape', price: 'R100' },
+    { service: 'Soak Off', price: 'R100' },
+    { service: 'Soak Off Only', price: 'R130' },
+    { service: 'Acrylic Nail Repair', price: 'R100' },
+  ] },
+  { title: 'Gel', rows: [
+    { service: 'Gel Polish (Hands)', price: 'R380' },
+    { service: 'Gel Polish (Feet)', price: 'R350' },
+    { service: 'Full Cover Tips + Gel', price: 'R550' },
+    { service: 'Add Manicure', price: 'R180' },
+    { service: 'Gel Repair', price: 'R70' },
+    { service: 'Gel Soak Off', price: 'R90' },
+    { service: 'Soak Off Only', price: 'R100' },
+    { service: 'Repair Big Toes', price: 'R70' },
+    { service: 'Hard Gel', price: 'R520' },
+    { service: 'Hard Gel Fill', price: 'R400' },
+  ] },
+  { title: 'Teens (12–16 years)', rows: [
+    { service: 'Gelish Polish', price: 'R300' },
+    { service: 'Sculpture', price: 'R600' },
+    { service: 'Overlay', price: 'R500' },
+    { service: 'Manicure', price: 'R250' },
+    { service: 'Pedi', price: 'R300' },
+  ] },
+  { title: 'Refills', rows: [
+    { service: '2 Weeks · 1–3', price: 'R350' },
+    { service: '2 Weeks · 4–6', price: 'R420' },
+    { service: '2 Weeks · 7+', price: 'R500' },
+    { service: '3 Weeks · 1–3', price: 'R500' },
+    { service: '3 Weeks · 4–6', price: 'R550' },
+    { service: '3 Weeks · 7+', price: 'R550' },
+    { service: '4 Weeks', price: 'R550' },
+  ] },
+  { title: 'Nail Art', rows: [
+    { service: 'Glitter, Basic, Chrome · 1 Nail', price: 'R30' },
+    { service: 'Glitter, Basic, Chrome · 2 Nails', price: 'R80' },
+    { service: 'Glitter, Basic, Chrome · 10 Nails', price: 'R250' },
+    { service: 'Hand Painted Design · 1 Nail', price: 'R40' },
+    { service: 'Hand Painted Design · 2 Nails', price: 'R80' },
+    { service: 'Hand Painted Design · 4 Nails', price: 'R160' },
+    { service: '3D and Encapsulated · 1 Nail', price: 'R50' },
+    { service: '3D and Encapsulated · 2 Nails', price: 'R100' },
+    { service: '3D and Encapsulated · 4 Nails', price: 'R200' },
+    { service: 'Stones · ½ Nail', price: 'R50' },
+    { service: 'Stones · ¼ Nail', price: 'R30' },
+    { service: 'Stones · Full Designer', price: 'R120' },
+  ] },
+];
+
+const hairPriceGroups: PriceGroup[] = [
+  { title: 'Braiding', rows: [
+    { service: 'Bob Braids', price: 'R650' },
+    { service: 'Adult Bohemian', price: 'R980+' },
+    { service: 'Kids Bohemian', price: 'R850+' },
+    { service: 'Faux Locs – Long', price: 'R1,200' },
+    { service: 'Freehand', price: 'R300' },
+    { service: 'Wig Lines', price: 'R280' },
+    { service: 'Freehand with Style', price: 'R380' },
+    { service: 'Adult French Curls – Long', price: 'R1,350' },
+    { service: 'Adult French Curls – Medium', price: 'R1,150' },
+    { service: 'Adult French Curls – Short', price: 'R950' },
+    { service: 'Kids French Curls – Long', price: 'R950+' },
+    { service: 'Kids French Curls – Medium', price: 'R750' },
+    { service: 'Kids French Curls – Short', price: 'R650' },
+    { service: 'Men Cornrows – Big Lines', price: 'R250' },
+    { service: 'Men Cornrows – Medium', price: 'R300' },
+    { service: 'Braids – Long', price: 'R950+' },
+    { service: 'Braids – Medium', price: 'R800' },
+    { service: 'Braids – Short', price: 'R750' },
+    { service: 'Wash Braids', price: 'R350' },
+    { service: 'Treatment on Braids', price: 'R480' },
+    { service: 'Wash Braids/Locs Retwist & Style', price: 'R550' },
+    { service: 'Kids Braids', price: 'R550+' },
+    { service: 'Kids Cornrows', price: 'R380' },
+    { service: 'Adult Knotless Braids – Long', price: 'R950+' },
+    { service: 'Adult Knotless Braids – Medium', price: 'R850' },
+    { service: 'Adult Knotless Braids – Short', price: 'R750' },
+    { service: 'Kids Knotless Braids – Long', price: 'R800+' },
+    { service: 'Kids Knotless Braids – Medium', price: 'R750' },
+    { service: 'Kids Knotless Braids – Short', price: 'R650' },
+    { service: 'Kids Twists – Long', price: 'R950' },
+    { service: 'Kids Twists – Medium', price: 'R850' },
+    { service: 'Kids Twists – Short', price: 'R750' },
+    { service: 'Adult Twists – Long', price: 'R1,050' },
+    { service: 'Adult Twists – Medium', price: 'R950' },
+    { service: 'Adult Twists – Short', price: 'R850' },
+  ] },
+  { title: 'Natural Hair', rows: [
+    { service: 'Undo Braids', price: 'R200' },
+    { service: 'Undo Weave', price: 'R200' },
+    { service: 'Undo Freehand', price: 'R100' },
+    { service: 'Removal of Glued Wig', price: 'R80' },
+    { service: 'Detangle Hair', price: 'R150+' },
+    { service: 'Kids Detangle & Wash', price: 'R180' },
+    { service: 'Cholesterol Hair Treatment', price: 'R350' },
+    { service: 'Wash & Dry', price: 'R250' },
+    { service: 'Wash & Twist Natural Hair', price: 'R550' },
+    { service: 'Natural Wash of Weave', price: 'R350' },
+    { service: 'Wash Weave with Treatment', price: 'R450' },
+    { service: 'Wash Weave and Style', price: 'R380' },
+    { service: 'Wash Closure & Deglue', price: 'R150' },
+    { service: 'Wig Undo & Pondo Glue', price: 'R380' },
+    { service: 'Gel Pondo', price: 'R480' },
+    { service: 'Glueless, Install + Style', price: 'R450' },
+    { service: 'Wig Install & Style', price: 'R650' },
+  ] },
+  { title: 'Treatments', rows: [
+    { service: 'Kids Treatment', price: 'R300' },
+    { service: 'Hot Oil & Head Massage', price: 'R480' },
+    { service: 'Mizani Treatment', price: 'R450' },
+    { service: 'Mizani Luxury Treatment & Stem', price: 'R600' },
+    { service: 'Mizani Treatment Silk Press with Blowout', price: 'R680' },
+    { service: 'Mizani Relaxer', price: 'R500' },
+    { service: 'Mizani Relaxer, Cut, Blowwave & Flat Iron', price: 'R750' },
+    { service: 'Mizani Sensitive Relaxer', price: 'R530' },
+    { service: 'Dark & Lovely Relaxer', price: 'R350' },
+  ] },
+  { title: 'Styling', rows: [
+    { service: 'Sew in Weave', price: 'R650' },
+    { service: 'Frontal Sew in Wig/Weave', price: 'R850' },
+    { service: 'Wash and Style with Rollers', price: 'R300' },
+  ] },
+];
+
+function PriceList({ groups }: { groups: PriceGroup[] }) {
+  return <div className="price-groups">{groups.map((group) => <section className="price-group" key={group.title} aria-labelledby={`price-group-${group.title.toLowerCase().replaceAll(' ', '-')}`}>
+    <h3 id={`price-group-${group.title.toLowerCase().replaceAll(' ', '-')}`}>{group.title}</h3>
+    <table><thead><tr><th scope="col">Service</th><th scope="col">Price</th></tr></thead><tbody>{group.rows.map((row) => <tr key={row.service}><th scope="row">{row.service}</th><td>{row.price}</td></tr>)}</tbody></table>
+  </section>)}</div>;
+}
+
 function PricingPage() {
+  const [activeCategory, setActiveCategory] = useState<'nails' | 'hair'>('nails');
+  const categories = [
+    { id: 'nails' as const, label: 'Nails' },
+    { id: 'hair' as const, label: 'Hair' },
+  ];
+  const selectCategoryWithKeyboard = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return;
+    event.preventDefault();
+    const nextIndex = event.key === 'Home' ? 0 : event.key === 'End' ? categories.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : categories.length - 1)) % categories.length;
+    setActiveCategory(categories[nextIndex].id);
+    document.getElementById(`pricing-tab-${categories[nextIndex].id}`)?.focus();
+  };
+
   return <main className="page-transition pricing-page">
-    <PageIntro eyebrow="THE HOUSE MENU" title="The price" accent="list." copy="A clear look at services and prices at Cherished Beauty, Polofields Crossing, Midrand." imageFile="salon-hair-stations.jpg" imageAlt="The hair studio at Polofields Crossing" />
     <section className="pricing-document-section section-pad" aria-labelledby="pricing-document-heading">
       <div className="pricing-document-intro reveal">
-        <div><Eyebrow>CHERISHED BEAUTY · MIDRAND</Eyebrow><h2 id="pricing-document-heading">The details,<br /><em>in full.</em></h2><p>Browse the current price list below, or open the original PDF in a new tab for a closer look.</p></div>
+        <div><Eyebrow>CHERISHED BEAUTY · MIDRAND</Eyebrow><h1 className="page-intro" id="pricing-document-heading">The details,<br /><em>in full.</em></h1><p className="page-intro">Choose a service to browse our prices, or open the original PDF for the full price list.</p></div>
         <div className="pricing-document-actions"><a className="luxury-button" href={priceListUrl} target="_blank" rel="noreferrer"><span>View full price list</span><i><ArrowGlyph direction="up-right" /></i></a><a className="pricing-download-link" href={priceListUrl} download="CB Price List.pdf">Download the PDF <span><ArrowGlyph direction="down" /></span></a></div>
       </div>
-      <div className="pricing-document-viewer reveal"><iframe src={`${priceListUrl}#view=FitH`} title="Cherished Beauty price list PDF" loading="lazy" /><a className="pricing-viewer-fallback" href={priceListUrl} target="_blank" rel="noreferrer">PDF not displaying? Open the price list in a new tab <span><ArrowGlyph direction="up-right" /></span></a></div>
+      <div className="pricing-category-tabs" role="tablist" aria-label="Price list categories">{categories.map((category, index) => <button id={`pricing-tab-${category.id}`} key={category.id} type="button" role="tab" tabIndex={activeCategory === category.id ? 0 : -1} aria-selected={activeCategory === category.id} aria-controls="pricing-panel" className={activeCategory === category.id ? 'is-active' : ''} onClick={() => setActiveCategory(category.id)} onKeyDown={(event) => selectCategoryWithKeyboard(event, index)}>{category.label}</button>)}</div>
+      <div id="pricing-panel" role="tabpanel" aria-labelledby={`pricing-tab-${activeCategory}`} className="pricing-panel reveal"><PriceList groups={activeCategory === 'nails' ? nailPriceGroups : hairPriceGroups} /></div>
       <div className="pricing-document-foot"><span>THE OFFICIAL CHERISHED BEAUTY PRICE LIST</span><a href="tel:0100234291">Questions? Call 010 023 4291 <ArrowGlyph direction="up-right" /></a></div>
     </section>
   </main>;
@@ -677,6 +936,7 @@ function App() {
   return <><ScrollToTopOnRouteChange /><Navbar /><Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/about" element={<AboutPage />} />
+    <Route path="/gallery" element={<OurGalleryPage />} />
     <Route path="/journal/the-women-who-raised-us" element={<MotherDayArticle />} />
     <Route path="/journal" element={<MotherDayArticle />} />
     <Route path="/services" element={<ServicesPage />} />
